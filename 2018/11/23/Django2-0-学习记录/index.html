@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        Django2.0 学习记录 - Daybreak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybreak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Django2-0学习记录"><span class="toc-text">Django2.0学习记录</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本使用"><span class="toc-text">基本使用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#setting模块"><span class="toc-text">setting模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#model模块"><span class="toc-text">model模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#urls模块"><span class="toc-text">urls模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#admin模块"><span class="toc-text">admin模块</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#view模块"><span class="toc-text">view模块</span></a></li></ol></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        Django2.0 学习记录
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2018-11-23 12:48:14</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#django,python" title="django,python">django,python</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h2 id="Django2-0学习记录"><a href="#Django2-0学习记录" class="headerlink" title="Django2.0学习记录"></a>Django2.0学习记录</h2><h3 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h3><p>pip install Django</p>
+<p>创建一个新的项目和应用</p>
+<p>Django-admin startproject cms  // 项目<br>cd cms<br>python manage.py startapp we  //应用</p>
+<p>创建数据库并同步</p>
+<p>python manage.py makemigrations web  //创建数据库<br>python manage.py migrate  //同步数据库</p>
+<p>创建超级用户</p>
+<p>python manage.py createsuperuser</p>
+<p>交互式shell</p>
+<p>python manage.py shell</p>
+<h3 id="setting模块"><a href="#setting模块" class="headerlink" title="setting模块"></a>setting模块</h3><p>设置中文字体</p>
+<p>LANGUAGE_CODE = ‘zh_Hans’<br>TIME_ZONE = ‘Asia/Shanghai’</p>
+<p>设置模版路径</p>
+<p>TEMPLATES = [<br>    {<br>        …<br>        ‘DIRS’: [os.path.join(BASE_DIR, ‘templates’)],<br>        …<br>    },<br>]</p>
+<p>加载静态文件</p>
+<p>STATIC_URL = ‘/static/‘</p>
+<p>STATICFILES_DIRS = (<br>    os.path.join(BASE_DIR, “static”),<br>)</p>
+<h3 id="model模块"><a href="#model模块" class="headerlink" title="model模块"></a>model模块</h3><p>表关系</p>
+<p>一对多，models.ForeignKey(ColorDic)<br>一对一，models.OneToOneField(OneModel)<br>多对多，authors = models.ManyToManyField(Author)</p>
+<p>Field<br>PositiveIntegerField  #正整数字段</p>
+<p>查看数据库结构<br>python manage.py sqlmigrate polls 0001</p>
+<p>on_delete(表关系)</p>
+<p>on_delete=models.CASCADE级联删除<br>当删除主表的数据时候从表中的数据也随着一起删除</p>
+<p>auto_now_add(DateTime)</p>
+<p>auto_now_add为添加时的时间，更新对象时不会有变动</p>
+<p>objects.all()</p>
+<p>all返回的是QuerySet对象，程序并没有真的在数据库中执行SQL语句查询数据，但支持迭代，使用for循环可以获取数据</p>
+<p>objects.get()与objects.filter()二者类似</p>
+<p>get返回的是Model对象，类型为列表，说明使用get方法会直接执行sql语句获取数据</p>
+<p>用于类型转换，将object的类型转换为可读的str型<br>def <strong>str</strong>(self):<br>    return self.name</p>
+<p>显示中文名称<br>class Mate:<br>    verbose_name = ‘标签’<br>    verbose_name_plural = ‘标签’</p>
+<h3 id="urls模块"><a href="#urls模块" class="headerlink" title="urls模块"></a>urls模块</h3><p><a href="int:question_id" target="_blank" rel="noopener">int:question_id</a></p>
+<p>path(‘<a href="int:question_id" target="_blank" rel="noopener">int:question_id</a>/‘, views.detail, name=’detail’)<br>&lt;int:是一个转换器，用于确定哪些模式应与URL路径的这一部分匹配<br>:question_id&gt;定义将用于标识匹配模式的名称</p>
+<h3 id="admin模块"><a href="#admin模块" class="headerlink" title="admin模块"></a>admin模块</h3><p>显示内容更多属性<br>class PostAdmin(admin.ModelAdmin):<br>    list_display = [‘title’, ‘created_time’, ‘modified_time’, ‘category’, ‘author’]<br>admin.site.register(Post,PostAdmin)</p>
+<h3 id="view模块"><a href="#view模块" class="headerlink" title="view模块"></a>view模块</h3><p>markdown渲染</p>
+<p>pip install markdwon</p>
+<p>import markdown</p>
+<p>def detail(request, pk):<br>    post = get_object_or_404(Post, pk=pk)<br>    post.body = markdown.markdown(post.body,<br>                                  extensions=[<br>                                     ‘markdown.extensions.extra’,<br>                                     ‘markdown.extensions.codehilite’,<br>                                     ‘markdown.extensions.toc’,<br>                                  ])<br>    return render(request, ‘blog/detail.html’, context={‘post’: post})</p>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <div id="comment-container">
+        </div>
+    </div>
+</div>
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404">胖虎</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            <span id="busuanzi_value_site_pv"></span>PV
+        </span>
+        <span id="busuanzi_container_site_uv">
+            <span id="busuanzi_value_site_uv"></span>UV
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: 'Django2.0 学习记录',
+        owner: 'Daybr4ak',
+        repo: 'Daybr4ak.github.io',
+        oauth: {
+            client_id: '8b74f097fa60ac743b82',
+            client_secret: '837baf77a88f3c0535b7cdf4790e047666c565fb',
+        },
+    })
+    gitment.render('comment-container')
+</script>
+
+</html>
