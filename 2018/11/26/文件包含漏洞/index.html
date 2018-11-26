@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        文件包含漏洞 - Daybreak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybreak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件包含漏洞成因"><span class="toc-text">文件包含漏洞成因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件包含漏洞类型"><span class="toc-text">文件包含漏洞类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件包含函数"><span class="toc-text">文件包含函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地文件包含"><span class="toc-text">本地文件包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#远程文件包含"><span class="toc-text">远程文件包含</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        文件包含漏洞
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2018-11-26 14:28:01</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#渗透测试" title="渗透测试">渗透测试</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <p>文章首发于<a href="https://www.t00ls.net/thread-44223-1-1.html" target="_blank" rel="noopener">t00ls</a>，重新搭建博客后将文章存放于博客内容中。</p>
+<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>文件包含漏洞是一种常见的漏洞类型，依赖于脚本运行时的web环境，当攻击者利用可控变量构造可执行的代码路径时，该漏洞会导致攻击者利用脚本运行来执行相应的文件。如果一个网站系统存在文件包含漏洞，会导致各种基于文件的攻击。</p>
+<h2 id="文件包含漏洞成因"><a href="#文件包含漏洞成因" class="headerlink" title="文件包含漏洞成因"></a>文件包含漏洞成因</h2><p>服务器通过php的特性（函数）去包含任意文件时，由于要包含的这个文件来源过滤不严，从而可去包含一个恶意文件，而我们可以构造这个恶意文件来达到攻击的目的。</p>
+<h2 id="文件包含漏洞类型"><a href="#文件包含漏洞类型" class="headerlink" title="文件包含漏洞类型"></a>文件包含漏洞类型</h2><p>1、本地文件包含:  </p>
+<pre><code>可以包含本地文件，在条件允许时甚至能执行代码
+</code></pre><p>2、远程文件包含:  </p>
+<pre><code>可以包含任意文件。
+条件:php.ini中allow_url_fopen和allow_url_include要为On
+allow_url_fopen：默认的封装协议提供ftp和http协议访问远程文件
+allow_url_include：改选项允许使用 include,inculde_once,require,require_once 
+(这两项可以在phpinfo信息中查看是否开启)
+</code></pre><h2 id="文件包含函数"><a href="#文件包含函数" class="headerlink" title="文件包含函数"></a>文件包含函数</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">include</span>, inculde_once</span><br><span class="line"><span class="keyword">require</span>, <span class="keyword">require_once</span></span><br></pre></td></tr></table></figure>
+<p>这两个函数的区别如下:<br>为了更好的理解这里我开启了debug  (改配置文件  display_error = on)<br>include():当代码执行到该函数时，找不到包含文件时会产生警告，但是脚本会继续执行。(可以看到这里包含了一个本地并不存在的文件123.php 这里虽然出现了警告,但是脚本继续往下执行输出了123。)<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p258" alt="2b4dca478c93cdbb68b1a80b56bef8e4.png"><br>require():只要程序一运行就包含文件，找不到被包含的文件时会产生致命错误，并停止脚本。(可以看到这里直接报错，后面的代码并没有被执行。<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p259" alt="ebc1dec65e17ccbc8ed478ab8ce67eb3.png"><br>如果函数携带_once则表示已经包含过的代码不会被再次包含。</p>
+<h2 id="本地文件包含"><a href="#本地文件包含" class="headerlink" title="本地文件包含"></a>本地文件包含</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span> </span></span><br><span class="line"><span class="php">$a = $_GET[<span class="string">'file'</span>];</span></span><br><span class="line"><span class="php"><span class="keyword">include</span>($a);</span></span><br><span class="line"><span class="php"><span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure>
+<p>这是一段简单的php文件包含代码，这里get获取了一个可控参数file并进行包含，这里我们可以控制它来包含我们想要的代码。<br>这里将文件的内容包含，因此无论我们的文件后缀是何种形式的，如:jpg,txt等等均可以被包含并当作php代码执行。<br>这里在本地新建文件test.txt  内容为&lt;?php phpinfo();?&gt; 并对该文件包含<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p260" alt="7e494452ee6b4989562339c6259bec49.png"><br>如图代码被成功包含并执行，界面显示出了phpinfo的内容。文件包含漏洞还可以包含本地服务器中的其他文件。这里因为我的环境是linux的所以可以尝试包含/etc/passwd。<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p261" alt="a414cbc3548d46d2a3a65cc2e331bd25.png"><br>当然这样包含还是需要一定条件的，因为这里我们是可以完全控制文件类型的，如果代码进行修改如下:<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="php"><span class="meta">&lt;?php</span> </span></span><br><span class="line"><span class="php">$a = $_GET[<span class="string">'file'</span>].’php’;</span></span><br><span class="line"><span class="php"><span class="keyword">include</span>($a);</span></span><br><span class="line"><span class="php"><span class="meta">?&gt;</span></span></span><br></pre></td></tr></table></figure></p>
+<p>这里被限制了文件累型，只有.php文件才被包含，这里如果按照刚才的方法进行包含的话，结果如下所示:<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p262" alt="e57d4ba362a7435a7ba039a935dddf12.png"><br>可以看出来当我们的参数传输进去时，变成了/etc/passwd.php  但是服务器中并未含有这个文件于是会报错。<br>如果php版本小于5.3 并且magic_quotes_gpc = on  tomagic_quotes_gpc = off时我们可以使用%00截断后面的.php，但是在高版本中修复了这个问题。<br>因为我们包含的并不只是文件而是文件的内容，因此我们可以进一步利用，这里创建一个执行命令的回显文件利用system函数执行。<br>可以看出我们成功执行了代码。这里我们也可以编写一个shell上传然后利用菜刀链接这里就不做示范了。<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p263" alt="ec8b1fea4084239650945ea34c61ca8b.png"></p>
+<h2 id="远程文件包含"><a href="#远程文件包含" class="headerlink" title="远程文件包含"></a>远程文件包含</h2><p>本地文件包含与远程文件相同的原则，但前者只能包含服务器上存在的文件，后者可以包含远程服务器上的文件.<br>之前介绍了远程包含的条件，这里还需要注意一点就是远程包含的语音不能和目标服务器语言一致，因为远程文件有php后缀和远程文件内容，远程服务器会运行代码后进行包含，包含过来的内容就不是本地服务器的了。<br>图解如下: 本地服务器127.0.0.1  远程 192.168.40.130<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p264" alt="73be57a58995440c7ef0246fb22936b0.png"><br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p265" alt="2661a5afc300411acd1ad43fbd87e158.png"></p>
+<p>远程文件包含利用:<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p266" alt="b08d3ac48fd7db0e4ca42e8738c38901.png"><br>远程文件包含可以说是在以本地包含为基础，满足条件下的进一步利用。</p>
+<p>当然文件包含中还有相当多的伪协议如下:<br><figure class="highlight xl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">data</span>:<span class="keyword">text</span>/plain <span class="built_in">or</span> <span class="keyword">data</span>: <span class="keyword">text</span>/plain; base64</span><br><span class="line">php:<span class="comment">//input</span></span><br><span class="line">zip:<span class="comment">//</span></span><br></pre></td></tr></table></figure></p>
+<p>这里只列举了一部分还有很多大家可以自己去尝试<br>data:text/plain or data: text/plain; base64<br>输出直接在对应的URL中显示参数  如果使用后者我们只需要将代码进行base64编码就行了<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p267" alt="b334b8493419c55e04f484f77b344f8c.png"><br>php://input<br>访问请求的原始数据的只读流，将post请求中的数据作为PHP代码执行。<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p268" alt="c90f5036420362e460744a98a9814eb6.png"><br>Zip:<br>可以访问zip中的文件，但是需要一个绝对路径，这里的利用我们可以上传一个zip木马然后对改zip进行包含 从而获得一个shell<br>首先我们本地创建一个cmd.php的文件<br>内容为：&lt;?php system(“ipconfig”)?&gt;<br>然后压缩为zip文件并改名为.jpg后缀<br>利用zip伪协议<br><img src="evernotecid://B9C6B03C-CA23-4D79-B5B5-6769A3E63029/appyinxiangcom/20791861/ENResource/p269" alt="04f7179f5dd0579f6296e3f94aef64d2.png"><br>Php文件包含利用之包含临时文件</p>
+<p>利用条件:<br>存在phpinfo页面</p>
+<p>存在文件包含漏洞:</p>
+<p>这里牵扯到一个php处理大文件流的一个知识点。</p>
+<p>默认PHP引擎对enctype=“multipart/form-data”请求处理流程：  </p>
+<pre><code>1、 请求到达
+2、 创建临时文件，并写入上传文件内容
+3、 调用相应PHP脚本处理，比如校验文件后缀、移动文件等
+4、 删除临时文件
+</code></pre><p>当我们上传一个文件的时候他会先创建一个临时文件，我们的利用点就在这里，利用文件包含来包含上传的临时文件，但因为服务器请求速度过快，往往我们并未包含临时文件这个文件就被删除了。那么我们如何利用呢？</p>
+<p>这里牵扯到了分块传输编码<br>HTTP1.1支持的chunked编码传输方法，浏览器不需要等到内容字节全部下载完整，只需要接收一个chunked块即可解析页面，由于HTTP1.1采用持久连接，所以可以采用分块传输，并且只有响应包达到一定大小，无法预先判断报文大小使，才会采用chunked分块传输</p>
+<p>根据这个原理我们可以采用分块传输，提前获取临时文件名(利用phpinfo)<br>填充大量无用请求延长脚本处理时间，并不断发送请求，这样便可以包含临时文件，在phpinfo的variables模块的_Fifles一栏中我们可以获得文件的路径，然后我们可以写脚本进行条件竞争，一边发送大量请求，一边不断包含。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>文件包含利用方式是无穷的，重点在于你的想象力，思想有多广利用程度就有多大。</p>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404/">胖虎</a></span>
+        <span>/</span>
+        
+        <span><a href="https://gloxec.github.io/">hook</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv">
+            总访客
+            <span id="busuanzi_value_site_uv"></span>人
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: '文件包含漏洞',
+        owner: 'Daybr4ak',
+        repo: 'Daybr4ak.github.io',
+        oauth: {
+            client_id: '8b74f097fa60ac743b82',
+            client_secret: '837baf77a88f3c0535b7cdf4790e047666c565fb',
+        },
+    })
+    gitment.render('comment-container')
+</script>
+
+
+
+
+</html>
