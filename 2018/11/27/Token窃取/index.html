@@ -141,12 +141,12 @@
 <p>Impersonation token ( 模拟令牌 ) :<br>用于非交互登录 ( 利用 net use 访问共享文件夹 )</p>
 <p>注：两种 token 只在系统重启后清除， 具有 Delegation token 的用户在注销后，该 Token 将变成 Impersonation token，依旧有效。</p>
 <h2 id="Token窃取工具"><a href="#Token窃取工具" class="headerlink" title="Token窃取工具"></a>Token窃取工具</h2><p>下载链接：<a href="https://github.com/fdiskyou/incognito2" target="_blank" rel="noopener">incognito</a></p>
-<h2 id="MSF使用incognito"><a href="#MSF使用incognito" class="headerlink" title="MSF使用incognito"></a>MSF使用incognito</h2><p>查看当Token： getuid<br><img src="media/15433030952129.jpg" alt=""></p>
-<p>加载incognito：load incognito<br><img src="media/15433031122967.jpg" alt=""></p>
-<p>列举全部token：list_tokens -u<br><img src="media/15433033831120.jpg" alt=""></p>
-<p>Token窃取: impersonate_token “WIN-L6B129PFE38\aaa”<br><img src="media/15433034372759.jpg" alt=""></p>
-<p>返回之前token：rev2self or drop_token<br><img src="media/15433034850524.jpg" alt=""><br><img src="media/15433035296170.jpg" alt=""></p>
-<p>另外该工具还可以从进程中窃取token：steal_token 2144<br><img src="media/15433036305579.jpg" alt=""><br><img src="media/15433036919354.jpg" alt=""></p>
+<h2 id="MSF使用incognito"><a href="#MSF使用incognito" class="headerlink" title="MSF使用incognito"></a>MSF使用incognito</h2><p>查看当Token： getuid<br><img src="/img/media/15433030952129.jpg" alt=""></p>
+<p>加载incognito：load incognito<br><img src="/img/media/15433031122967.jpg" alt=""></p>
+<p>列举全部token：list_tokens -u<br><img src="/img/media/15433033831120.jpg" alt=""></p>
+<p>Token窃取: impersonate_token “WIN-L6B129PFE38\aaa”<br><img src="/img/media/15433034372759.jpg" alt=""></p>
+<p>返回之前token：rev2self or drop_token<br><img src="/img/media/15433034850524.jpg" alt=""><br><img src="/img/media/15433035296170.jpg" alt=""></p>
+<p>另外该工具还可以从进程中窃取token：steal_token 2144<br><img src="/img/media/15433036305579.jpg" alt=""><br><img src="/img/media/15433036919354.jpg" alt=""></p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过对Windows令牌窃取，可以进行用户会话升权降权的操作。可以利用其他的用户身份去进行相应的操作。</p>
 
         
