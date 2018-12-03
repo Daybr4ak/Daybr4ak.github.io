@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        pwn从零学习之路-0 - Daybreak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybreak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Fd-题解"><span class="toc-text">Fd-题解</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#题目内容"><span class="toc-text">题目内容</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解题思路"><span class="toc-text">解题思路</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#解题相关知识"><span class="toc-text">解题相关知识</span></a></li></ol></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        pwn从零学习之路-0
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2018-12-03 13:54:19</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#pwn" title="pwn">pwn</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h2 id="Fd-题解"><a href="#Fd-题解" class="headerlink" title="Fd-题解"></a>Fd-题解</h2><h3 id="题目内容"><a href="#题目内容" class="headerlink" title="题目内容"></a>题目内容</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">fd@ubuntu:~$ cat fd.c </span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"><span class="keyword">char</span> buf[<span class="number">32</span>];</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span>* argv[], <span class="keyword">char</span>* envp[])</span></span>&#123;</span><br><span class="line"> 	<span class="keyword">if</span>(argc&lt;<span class="number">2</span>)&#123;</span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">"pass argv[1] a number\n"</span>);</span><br><span class="line"> 		<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	<span class="keyword">int</span> fd = atoi( argv[<span class="number">1</span>] ) - <span class="number">0x1234</span>;</span><br><span class="line"> 	<span class="keyword">int</span> len = <span class="number">0</span>;</span><br><span class="line"> 	len = read(fd, buf, <span class="number">32</span>);</span><br><span class="line"> 	<span class="keyword">if</span>(!<span class="built_in">strcmp</span>(<span class="string">"LETMEWIN\n"</span>, buf))&#123;</span><br><span class="line"> 		<span class="built_in">printf</span>(<span class="string">"good job :)\n"</span>);</span><br><span class="line"> 		system(<span class="string">"/bin/cat flag"</span>);</span><br><span class="line"> 		<span class="built_in">exit</span>(<span class="number">0</span>);</span><br><span class="line"> 	&#125;</span><br><span class="line"> 	<span class="built_in">printf</span>(<span class="string">"learn about Linux file IO\n"</span>);</span><br><span class="line"> 	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="解题思路"><a href="#解题思路" class="headerlink" title="解题思路"></a>解题思路</h3><p>使fd值为0，从而进入标准输入stdinr，然后输入LETMEWIN<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">fd<span class="variable">@ubuntu</span><span class="symbol">:~</span><span class="variable">$ </span>./fd <span class="number">4660</span> </span><br><span class="line">LETMEWIN</span><br><span class="line">good job <span class="symbol">:</span>)</span><br><span class="line">mommy! I think I know what a file descriptor is!!</span><br></pre></td></tr></table></figure></p>
+<h3 id="解题相关知识"><a href="#解题相关知识" class="headerlink" title="解题相关知识"></a>解题相关知识</h3><p>1、标准输入输出和错误</p>
+<p>linux下使用标准输入文件stdin和标准输出文件stdout，来表示每个命令的输入和输出，还使用标准错误输出文件stderr用于输出错误信息。三个标准流都与系统与控制终端设备相连(如:键盘)。</p>
+<p>因此，在标准情况下，每个命令通常从相应的控制终端中获取输入，并将输出打印到控制终端屏幕上，如本题解题过程。也可以将程序重新定义，将stdin，stdout重定向。最基本的使用方法是定义到一个文件上，从一个文件获取输入，输出到另外的文件中。如read()，write()函数的使用。</p>
+<p>2、文件描述符</p>
+<p>在底层操作系统是不会通过文件指针来查找文件的，而是通过文件表示符来操作的。</p>
+<p>文件标识符以一系列证书，从0开始依次递增。但是一般系统标识符都是从3开始的。</p>
+<p>文件描述符0、1、2和终端相关。如果希望命令从文件中读取输入或输出到文件中，就需要使用文件重定向。</p>
+<p>系统默认打开三个流：</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">文件描述符</th>
+<th style="text-align:center">缩写</th>
+<th style="text-align:center">描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0</td>
+<td style="text-align:center">stdin</td>
+<td style="text-align:center">标准输入(命令的输入，缺省和终端键盘关联)</td>
+</tr>
+<tr>
+<td style="text-align:center">1</td>
+<td style="text-align:center">stdout</td>
+<td style="text-align:center">标准输出(命令的输出，缺省和终端屏幕关联)</td>
+</tr>
+<tr>
+<td style="text-align:center">2</td>
+<td style="text-align:center">stderr</td>
+<td style="text-align:center">标准错误输出(命令的错误信息输出，缺省和终端屏幕关联)</td>
+</tr>
+</tbody>
+</table>
+<p>3、重定向标准输出</p>
+<p>whoami &gt; filename  #把命令标准输出重定向到一个文件中(如果文件存在，则内容覆盖)</p>
+<p>whoami &gt;&gt; filename # 把命令标准输出重定向到文件中(尾部追加)</p>
+<p>4、重定向标准输入</p>
+<p>whoami &lt; filename  # 以filename文件作为命令whoami的标准输入</p>
+<p>whoami &lt;&lt; DELIMITER # 从标准输入中读入输入，直到遇到DELIMITER分解符</p>
+<p>6、重定向标准错误</p>
+<p>whoami 2&gt; filename # 把whoami命令的标准错误重定向到文件中(如果文件存在，则内容覆盖)</p>
+<p>whoami &gt;&gt; filename # 把命令的标准错误重定向到文件中(尾部追加)</p>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404/">胖虎</a></span>
+        <span>/</span>
+        
+        <span><a href="https://gloxec.github.io/">hook</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv">
+            总访客
+            <span id="busuanzi_value_site_uv"></span>人
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: 'pwn从零学习之路-0',
+        owner: 'Daybr4ak',
+        repo: 'Daybr4ak.github.io',
+        oauth: {
+            client_id: '8b74f097fa60ac743b82',
+            client_secret: '837baf77a88f3c0535b7cdf4790e047666c565fb',
+        },
+    })
+    gitment.render('comment-container')
+</script>
+
+
+
+
+</html>
