@@ -174,15 +174,11 @@
 </tbody>
 </table>
 <p>3、重定向标准输出</p>
-<p>whoami &gt; filename  #把命令标准输出重定向到一个文件中(如果文件存在，则内容覆盖)</p>
-<p>whoami &gt;&gt; filename # 把命令标准输出重定向到文件中(尾部追加)</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whoami &gt; filename  <span class="comment">#把命令标准输出重定向到一个文件中(如果文件存在，则内容覆盖)</span></span><br><span class="line">whoami <span class="meta">&gt;&gt; </span>filename <span class="comment"># 把命令标准输出重定向到文件中(尾部追加)</span></span><br></pre></td></tr></table></figure>
 <p>4、重定向标准输入</p>
-<p>whoami &lt; filename  # 以filename文件作为命令whoami的标准输入</p>
-<p>whoami &lt;&lt; DELIMITER # 从标准输入中读入输入，直到遇到DELIMITER分解符</p>
-<p>6、重定向标准错误</p>
-<p>whoami 2&gt; filename # 把whoami命令的标准错误重定向到文件中(如果文件存在，则内容覆盖)</p>
-<p>whoami &gt;&gt; filename # 把命令的标准错误重定向到文件中(尾部追加)</p>
-
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">whoami</span> &lt; filename  <span class="comment"># 以filename文件作为命令whoami的标准输入</span></span><br><span class="line">whoami &lt;&lt; DELIMITER <span class="comment"># 从标准输入中读入输入，直到遇到DELIMITER分解符</span></span><br></pre></td></tr></table></figure>
+<p>5、重定向标准错误</p>
+<figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whoami <span class="number">2</span>&gt; filename <span class="comment"># 把whoami命令的标准错误重定向到文件中(如果文件存在，则内容覆盖)</span></span><br><span class="line">whoami <span class="meta">&gt;&gt; </span>filename <span class="comment"># 把命令的标准错误重定向到文件中(尾部追加)</span></span><br></pre></td></tr></table></figure>
         
             <div class="donate-container">
     <div class="donate-button">
