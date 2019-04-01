@@ -178,20 +178,8 @@
 <p>5、重定向标准错误</p>
 <figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">whoami <span class="number">2</span>&gt; filename <span class="comment"># 把whoami命令的标准错误重定向到文件中(如果文件存在，则内容覆盖)</span></span><br><span class="line">whoami <span class="meta">&gt;&gt; </span>filename <span class="comment"># 把命令的标准错误重定向到文件中(尾部追加)</span></span><br></pre></td></tr></table></figure>
 <h2 id="collision"><a href="#collision" class="headerlink" title="collision"></a>collision</h2><p>1、\xc9 为字符串。使用python print后会输出？是因为计算机不识别的这个字符</p>
-<p>2、大端序 or 小端序<br>    端序：又称字节序、尾序、位序。在计算机领域是指机器存放多字节数据的字节顺序。在涉及到低层数据存储和网络数据传输研究中都会涉及端序。<br>    大端序：高位字节放在内存的低地址，低位字节放在内存的高地址。<br>    小端序：低位字节放在内存的低地址，高位字节放在内存的高地址。<br>    例：int a = 0x12345678  从左到右字节位降低 两个数为一个字节 12是高位78是低位，字节位具有相对性。</p>
-<pre><code>大端序存放方式：
-0x00000001           -- 12
-0x00000002           -- 34
-0x00000003           -- 56
-0x00000004           -- 78 
-地址位从低到高，字节位从高到低
-小端序存放方式：
-0x00000001           -- 78
-0x00000002           -- 56
-0x00000003           -- 34
-0x00000004           -- 12 
-地址位从低到高，字节位从低到高
-</code></pre><p>3、lsb文件基本都是小端序文件</p>
+<p>2、大端序 or 小端序<br>    端序：又称字节序、尾序、位序。在计算机领域是指机器存放多字节数据的字节顺序。在涉及到低层数据存储和网络数据传输研究中都会涉及端序。<br>    大端序：高位字节放在内存的低地址，低位字节放在内存的高地址。<br>    小端序：低位字节放在内存的低地址，高位字节放在内存的高地址。<br>    例：int a = 0x12345678  从左到右字节位降低 两个数为一个字节 12是高位78是低位，字节位具有相对性。<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">大端序存放方式：</span><br><span class="line"><span class="number">0x00000001</span>           -- <span class="number">12</span></span><br><span class="line"><span class="number">0x00000002</span>           -- <span class="number">34</span></span><br><span class="line"><span class="number">0x00000003</span>           -- <span class="number">56</span></span><br><span class="line"><span class="number">0x00000004</span>           -- <span class="number">78</span> </span><br><span class="line">地址位从低到高，字节位从高到低</span><br><span class="line">小端序存放方式：</span><br><span class="line"><span class="number">0x00000001</span>           -- <span class="number">78</span></span><br><span class="line"><span class="number">0x00000002</span>           -- <span class="number">56</span></span><br><span class="line"><span class="number">0x00000003</span>           -- <span class="number">34</span></span><br><span class="line"><span class="number">0x00000004</span>           -- <span class="number">12</span> </span><br><span class="line">地址位从低到高，字节位从低到高</span><br></pre></td></tr></table></figure></p>
+<p>3、lsb文件基本都是小端序文件</p>
 <h2 id="bof"><a href="#bof" class="headerlink" title="bof"></a>bof</h2><p>1、gets(s)存在溢出<br>    scanf遇到输出不能有空格，所以用gets输入字符串，但是gets出现了一个潜在问题，gets将不停地往s中塞东西，不管s的可用空间是否足够，就存在溢出漏洞问题，超过s空间长度会导致系统崩溃。</p>
 <p>2、esp汇编中为栈顶置针，栈中数据都是从栈顶进入的。</p>
 <table>
