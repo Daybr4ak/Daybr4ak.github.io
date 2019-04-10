@@ -191,7 +191,8 @@
 </div>
         
         <br />
-       
+        <div id="comment-container">
+        </div>
         <div id="disqus_thread"></div>
 
         <div id="lv-container">
@@ -267,10 +268,26 @@
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="/js/index.js"></script>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
 
 <script src="/js/gitment.js"></script>
-<script>
-    var gitment = new Gitment({
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+
+    // gitalk的主要参数
+        clientID: `Github Application clientID`,
+        clientSecret: `Github Application clientSecret`,
+        repo: `存储你评论 issue 的 Github 仓库名`,
+        owner: 'Github 用户名',
+        admin: ['Github 用户名'],
+        id: '页面的唯一标识，gitalk会根据这个标识自动创建的issue的标签',
+    
+    });
+    gitalk.render('gitalk-container');
+</script>
+<!-- <script>
+    var gitalk = new Gitalk({
         id: 'pwn从零学习之路-0',
         owner: 'Daybr4ak',
         repo: 'Daybr4ak.github.io',
@@ -280,7 +297,7 @@
         },
     })
     gitment.render('comment-container')
-</script>
+</script> -->
 
 
 
