@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        Title批量获取工具 - Daybr4ak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybr4ak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#批量快速获取Title、server信息工具"><span class="toc-text">批量快速获取Title、server信息工具</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        Title批量获取工具
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2019-04-20 15:42:56</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#安全工具" title="安全工具">安全工具</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h2 id="批量快速获取Title、server信息工具"><a href="#批量快速获取Title、server信息工具" class="headerlink" title="批量快速获取Title、server信息工具"></a>批量快速获取Title、server信息工具</h2><p>使用方法：将需要获取的网站链接列表保存在工具目录下的1.txt中，运行脚本。此脚本会时时输出在控制台中，运行完毕后所有信息全部输入到本地生成的output.xls文件中。如果有建议可以评论提交本人修改。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">title快速获取工具  </span></span><br><span class="line"><span class="string">保存需要获取的ip到本地txt文件直接运行即可</span></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> re, xlwt, random</span><br><span class="line"></span><br><span class="line"><span class="comment">#proxies = &#123;'http': 'http://127.0.0.1:8080'&#125;</span></span><br><span class="line">ThreadList = []   <span class="comment"># 线程列表</span></span><br><span class="line">runList = []      <span class="comment"># 运行线程列表</span></span><br><span class="line">FileList = []     <span class="comment"># 网站链接列表</span></span><br><span class="line">OutList = []      <span class="comment"># 输出数据列表</span></span><br><span class="line">lock = threading.Lock()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 随机agent</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">requests_headers</span><span class="params">()</span>:</span></span><br><span class="line">    user_agent = [</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows; U; Win98; en-US; rv:1.8.1) Gecko/20061010 Firefox/2.0'</span>,</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows; U; Windows NT 5.0; en-US) AppleWebKit/532.0 (KHTML, like Gecko) Chrome/3.0.195.6 Safari/532.0'</span>,</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows; U; Windows NT 5.1 ; x64; en-US; rv:1.9.1b2pre) Gecko/20081026 Firefox/3.1b2pre'</span>,</span><br><span class="line">        <span class="string">'Opera/10.60 (Windows NT 5.1; U; zh-cn) Presto/2.6.30 Version/10.60'</span>,</span><br><span class="line">        <span class="string">'Opera/8.01 (J2ME/MIDP; Opera Mini/2.0.4062; en; U; ssr)'</span>,</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows; U; Windows NT 5.1; ; rv:1.9.0.14) Gecko/2009082707 Firefox/3.0.14'</span>,</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36'</span>,</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36'</span>,</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows; U; Windows NT 6.0; fr; rv:1.9.2.4) Gecko/20100523 Firefox/3.6.4 ( .NET CLR 3.5.30729)'</span>,</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows; U; Windows NT 6.0; fr-FR) AppleWebKit/528.16 (KHTML, like Gecko) Version/4.0 Safari/528.16'</span>,</span><br><span class="line">        <span class="string">'Mozilla/5.0 (Windows; U; Windows NT 6.0; fr-FR) AppleWebKit/533.18.1 (KHTML, like Gecko) Version/5.0.2 Safari/533.18.5'</span></span><br><span class="line">    ]</span><br><span class="line">    UA = random.choice(user_agent)</span><br><span class="line">    headers = &#123;</span><br><span class="line">        <span class="string">'Accept'</span>:<span class="string">'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8'</span>,</span><br><span class="line">        <span class="string">'User-Agent'</span>:UA,</span><br><span class="line">        <span class="string">'Upgrade-Insecure-Requests'</span>:<span class="string">'1'</span>,</span><br><span class="line">        <span class="string">'Connection'</span>:<span class="string">'keep-alive'</span>,</span><br><span class="line">        <span class="string">'Cache-Control'</span>:<span class="string">'max-age=0'</span>,</span><br><span class="line">        <span class="string">'Accept-Encoding'</span>:<span class="string">'gzip, deflate, sdch'</span>,</span><br><span class="line">        <span class="string">'Accept-Language'</span>:<span class="string">'zh-CN,zh;q=0.8'</span>,</span><br><span class="line">        <span class="string">"Referer"</span>: <span class="string">"http://www.baidu.com/link?url=www.so.com&amp;url=www.soso.com&amp;&amp;url=www.sogou.com"</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> headers</span><br><span class="line"></span><br><span class="line"><span class="comment"># 多线程获取页面信息</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">MyThread</span><span class="params">(threading.Thread)</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self, ip)</span>:</span></span><br><span class="line">        threading.Thread.__init__(self)</span><br><span class="line">        self.ip = ip</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">if</span> self.ip[<span class="number">0</span>:<span class="number">4</span>] != <span class="string">'http'</span>:</span><br><span class="line">            self.ip = <span class="string">'http://'</span> + self.ip</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            headers = requests_headers()</span><br><span class="line">            r = requests.get(url=self.ip, headers=headers ,timeout=<span class="number">5</span>, proxies=<span class="keyword">False</span>)</span><br><span class="line">            <span class="keyword">if</span> r.text.find(<span class="string">'charset=utf-8'</span>) &gt;= <span class="number">0</span>:</span><br><span class="line">                r.encoding = <span class="string">'utf-8'</span></span><br><span class="line">            title = re.findall(<span class="string">r'&lt;title&gt;(.*?)&lt;/title&gt;'</span>, r.text)[<span class="number">0</span>]</span><br><span class="line">            lock.acquire(timeout=<span class="number">1</span>)</span><br><span class="line">            print([self.ip,title,r.headers[<span class="string">'Server'</span>]])</span><br><span class="line">            OutList.append([self.ip, title ,r.headers[<span class="string">'Server'</span>]])</span><br><span class="line">            lock.release()       </span><br><span class="line">        <span class="keyword">except</span>:</span><br><span class="line">            <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">OpenFile</span><span class="params">()</span>:</span></span><br><span class="line">    f = open(<span class="string">'1.txt'</span>,<span class="string">'r'</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> f.readlines():</span><br><span class="line">        FileList.append(i.strip())</span><br><span class="line">    f.close()</span><br><span class="line">    GetInfo(FileList)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">GetInfo</span><span class="params">(FileList)</span>:</span></span><br><span class="line">    taskNum = <span class="number">0</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> FileList:</span><br><span class="line">        t = MyThread(i)</span><br><span class="line">        ThreadList.append(t)</span><br><span class="line">    <span class="keyword">for</span> t <span class="keyword">in</span> ThreadList:</span><br><span class="line">        t.setDaemon(<span class="keyword">True</span>)</span><br><span class="line">        t.start()</span><br><span class="line">        runList.append(t)</span><br><span class="line">        taskNum += <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> taskNum &gt; <span class="number">19</span>:</span><br><span class="line">            <span class="keyword">for</span> t <span class="keyword">in</span> runList:</span><br><span class="line">                <span class="keyword">if</span> t.isAlive() == <span class="keyword">False</span>:</span><br><span class="line">                    runList.remove(t)</span><br><span class="line">                    taskNum -= <span class="number">1</span></span><br><span class="line">    OutPut(OutList)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">OutPut</span><span class="params">(OutList)</span>:</span></span><br><span class="line">    workbook = xlwt.Workbook(encoding=<span class="string">'utf-8'</span>)</span><br><span class="line">    worksheet = workbook.add_sheet(<span class="string">'result'</span>)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>,<span class="number">3</span>):</span><br><span class="line">        worksheet.col(i).width = <span class="number">10000</span></span><br><span class="line">    worksheet.write(<span class="number">0</span>,<span class="number">0</span>, label=<span class="string">'网站链接'</span>)</span><br><span class="line">    worksheet.write(<span class="number">0</span>,<span class="number">1</span>, label=<span class="string">'网站标题'</span>)</span><br><span class="line">    worksheet.write(<span class="number">0</span>,<span class="number">2</span>, label=<span class="string">'Server信息'</span>)</span><br><span class="line">    <span class="comment">#worksheet.write(0,3, label='Web指纹')</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">1</span>,len(OutList)):</span><br><span class="line">        output = OutList[i]</span><br><span class="line">        worksheet.write(i,<span class="number">0</span>, label=output[<span class="number">0</span>])</span><br><span class="line">        worksheet.write(i,<span class="number">1</span>, label=output[<span class="number">1</span>])</span><br><span class="line">        worksheet.write(i,<span class="number">2</span>, label=output[<span class="number">2</span>])</span><br><span class="line">    workbook.save(<span class="string">'output.xls'</span>)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    OpenFile()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> <span class="string">"__main__"</span> == __name__:</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure>
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404/">胖虎</a></span>
+        <span>/</span>
+        
+        <span><a href="https://gloxec.github.io/">hook</a></span>
+        <span>/</span>
+        
+        <span><a href="https://drops.org.cn/">Ra1ndr0op</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+	    总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv">
+	    总访客
+            <span id="busuanzi_value_site_uv"></span>人
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+
+    // gitalk的主要参数
+        clientID: '8b74f097fa60ac743b82',
+        clientSecret: '837baf77a88f3c0535b7cdf4790e047666c565fb',
+        repo: 'Daybr4ak.github.io',
+        owner: 'Daybr4ak',
+        admin: ['Daybr4ak'],
+        id: 'Title批量获取工具',
+    
+    });
+    gitalk.render('comment-container');
+</script>
+<!-- <script>
+    var gitalk = new Gitalk({
+        id: 'Title批量获取工具',
+        owner: 'Daybr4ak',
+        repo: 'Daybr4ak.github.io',
+        oauth: {
+            client_id: '8b74f097fa60ac743b82',
+            client_secret: '837baf77a88f3c0535b7cdf4790e047666c565fb',
+        },
+    })
+    gitment.render('comment-container')
+</script> -->
+
+
+
+
+</html>
