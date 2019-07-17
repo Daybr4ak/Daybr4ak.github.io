@@ -11,7 +11,7 @@
 
     <title>
         
-        JAVA反序列化分析之Apache-Commons-Collections - Daybr4ak&#39;s Blog
+        Apache-Commons-Collections - Daybr4ak&#39;s Blog
         
     </title>
 
@@ -119,7 +119,7 @@
 
 <div class="post-container">
     <div class="post-title">
-        JAVA反序列化分析之Apache-Commons-Collections
+        Apache-Commons-Collections
     </div>
 
     <div class="post-meta">
@@ -138,15 +138,15 @@
     </div>
     <div class="post-content ">
         <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>该类里的transform方法将一个对象转化为另一个对象.如Runtime.class经过transform转化输出结果为class java.lang.Class</p>
-<p><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic.png" alt="Pasted Graphi"></p>
-<h2 id="InvokerTransformer"><a href="#InvokerTransformer" class="headerlink" title="InvokerTransformer"></a>InvokerTransformer</h2><p>通过查看InvokerTransformer的源码可以看出该类是通过反射创建一个新的对象实例.该类使用了transform接口如图所示：<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%201.png" alt="Pasted Graphic 1"><br>cls获取传递进来的input对象值，例如传入runtime对象<br>cls.getMethod   以及method.invoke是利用java反射机制反射Runtime的getRuntime方法。<br>iMethodName表示得到的方法名， iParamTypes表示方法中使用的参数类型的数组<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%202.png" alt="Pasted Graphic 2"><br>通过InvokerTransformer反射出了java.lang.Runtime.getRuntime()<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%203.png" alt="Pasted Graphic 3"><br>执行命令的整个调用连为 java.lang.Runtime..getRuntime().invoke().exec()<br>可以通过该方式逐步调用：<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%204.png" alt="Pasted Graphic 4"><br>成功代码执行<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%205.png" alt="Pasted Graphic 5"><br>上述是整个反射链的过程</p>
-<h2 id="ChainedTransformer"><a href="#ChainedTransformer" class="headerlink" title="ChainedTransformer"></a>ChainedTransformer</h2><p><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%206.png" alt="Pasted Graphic 6"><br>可以看出该类重构了transform方法，将我们之前的调用链简化到一个方法中通过创建的Transformers数组循环反射执行。<br>如何构造出Runtime对象类型呢？</p>
-<h2 id="ConstantTransformer"><a href="#ConstantTransformer" class="headerlink" title="ConstantTransformer"></a>ConstantTransformer</h2><p><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%207.png" alt="Pasted Graphic 7"></p>
-<p>可以看出该类对transformer重构，返回一个iConstant变量，该变量在ConstantTransformer(Object)方法中被赋值。<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%208.png" alt="Pasted Graphic 8"><br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%209.png" alt="Pasted Graphic 9"><br>内部构造出了Runtime的对象类型<br>构造poc<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2010.png" alt="Pasted Graphic 10"><br>成功执行<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2011.png" alt="Pasted Graphic 11"></p>
-<h2 id="TransformedMap"><a href="#TransformedMap" class="headerlink" title="TransformedMap"></a>TransformedMap</h2><p>该类实现了一个功能——将普通的Map转换为一个TransformedMap，可以通过该类绕过transform方法。<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2012.png" alt="Pasted Graphic 12"><br>KeyTransfomer 表示key改变的操作  valueTransformer表示value改变时的操作<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2013.png" alt="Pasted Graphic 13"><br>从这里可以看出 value是可控的，在decorate中赋值即可，于是有如下利用代码：<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2014.png" alt="Pasted Graphic 14"><br>通过TransformedMap代替transform生成如下代码：<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2015.png" alt="Pasted Graphic 15"><br>成功弹出计算器：<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2016.png" alt="Pasted Graphic 16"></p>
-<p>至此我们获取了一个完整的poc，剩下需要找一个可重写readObject方法的类并且调用了对map值进行修改操作。<br>在ysoserial反序列化工具利用的是 BadAttributeValueExpException 查看代码如下：<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2019.png" alt="Pasted Graphic 19"></p>
-<p>该代码重构了readObject方法，如果传入类型为map类型，则会调用map.toString()方法。这里并没有对map的key值进行修改操作，于是需要利用LazyMap,TiedMapEntry两个类来构造<br>LazyMap：尝试访问key的value如果key不在会把值put进去<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2020.png" alt="Pasted Graphic 20"></p>
-<p>TiedMapEntry：会把map和一个key进行绑定<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2021.png" alt="Pasted Graphic 21"><br>利用LazyMap创建map对象，通过decotate方法设transfomer时的transformChain然后通过TiedMapEntry将map与不存在的key绑定，进而利用BadAttributeValueExpException创建一个map进行赋值。但是val是私有属性的，需要进行setAccessible(true)来访问私有变量。<br>至此完成整个exp编写：<br><img src="../img/media/JAVA反序列化分析之Apache-Commons-Collections/Pasted%20Graphic%2022.png" alt="Pasted Graphic 22"></p>
+<p><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic.png" alt="Pasted Graphi"></p>
+<h2 id="InvokerTransformer"><a href="#InvokerTransformer" class="headerlink" title="InvokerTransformer"></a>InvokerTransformer</h2><p>通过查看InvokerTransformer的源码可以看出该类是通过反射创建一个新的对象实例.该类使用了transform接口如图所示：<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%201.png" alt="Pasted Graphic 1"><br>cls获取传递进来的input对象值，例如传入runtime对象<br>cls.getMethod   以及method.invoke是利用java反射机制反射Runtime的getRuntime方法。<br>iMethodName表示得到的方法名， iParamTypes表示方法中使用的参数类型的数组<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%202.png" alt="Pasted Graphic 2"><br>通过InvokerTransformer反射出了java.lang.Runtime.getRuntime()<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%203.png" alt="Pasted Graphic 3"><br>执行命令的整个调用连为 java.lang.Runtime..getRuntime().invoke().exec()<br>可以通过该方式逐步调用：<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%204.png" alt="Pasted Graphic 4"><br>成功代码执行<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%205.png" alt="Pasted Graphic 5"><br>上述是整个反射链的过程</p>
+<h2 id="ChainedTransformer"><a href="#ChainedTransformer" class="headerlink" title="ChainedTransformer"></a>ChainedTransformer</h2><p><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%206.png" alt="Pasted Graphic 6"><br>可以看出该类重构了transform方法，将我们之前的调用链简化到一个方法中通过创建的Transformers数组循环反射执行。<br>如何构造出Runtime对象类型呢？</p>
+<h2 id="ConstantTransformer"><a href="#ConstantTransformer" class="headerlink" title="ConstantTransformer"></a>ConstantTransformer</h2><p><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%207.png" alt="Pasted Graphic 7"></p>
+<p>可以看出该类对transformer重构，返回一个iConstant变量，该变量在ConstantTransformer(Object)方法中被赋值。<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%208.png" alt="Pasted Graphic 8"><br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%209.png" alt="Pasted Graphic 9"><br>内部构造出了Runtime的对象类型<br>构造poc<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2010.png" alt="Pasted Graphic 10"><br>成功执行<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2011.png" alt="Pasted Graphic 11"></p>
+<h2 id="TransformedMap"><a href="#TransformedMap" class="headerlink" title="TransformedMap"></a>TransformedMap</h2><p>该类实现了一个功能——将普通的Map转换为一个TransformedMap，可以通过该类绕过transform方法。<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2012.png" alt="Pasted Graphic 12"><br>KeyTransfomer 表示key改变的操作  valueTransformer表示value改变时的操作<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2013.png" alt="Pasted Graphic 13"><br>从这里可以看出 value是可控的，在decorate中赋值即可，于是有如下利用代码：<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2014.png" alt="Pasted Graphic 14"><br>通过TransformedMap代替transform生成如下代码：<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2015.png" alt="Pasted Graphic 15"><br>成功弹出计算器：<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2016.png" alt="Pasted Graphic 16"></p>
+<p>至此我们获取了一个完整的poc，剩下需要找一个可重写readObject方法的类并且调用了对map值进行修改操作。<br>在ysoserial反序列化工具利用的是 BadAttributeValueExpException 查看代码如下：<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2019.png" alt="Pasted Graphic 19"></p>
+<p>该代码重构了readObject方法，如果传入类型为map类型，则会调用map.toString()方法。这里并没有对map的key值进行修改操作，于是需要利用LazyMap,TiedMapEntry两个类来构造<br>LazyMap：尝试访问key的value如果key不在会把值put进去<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2020.png" alt="Pasted Graphic 20"></p>
+<p>TiedMapEntry：会把map和一个key进行绑定<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2021.png" alt="Pasted Graphic 21"><br>利用LazyMap创建map对象，通过decotate方法设transfomer时的transformChain然后通过TiedMapEntry将map与不存在的key绑定，进而利用BadAttributeValueExpException创建一个map进行赋值。但是val是私有属性的，需要进行setAccessible(true)来访问私有变量。<br>至此完成整个exp编写：<br><img src="../img/media/Apache-Commons-Collections/Pasted%20Graphic%2022.png" alt="Pasted Graphic 22"></p>
 <h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a href="https://security.tencent.com/index.php/blog/msg/97" target="_blank" rel="noopener">https://security.tencent.com/index.php/blog/msg/97</a><br><a href="https://www.freebuf.com/news/150872.html" target="_blank" rel="noopener">https://www.freebuf.com/news/150872.html</a><br><a href="http://pupiles.com/java_unserialize2.html" target="_blank" rel="noopener">http://pupiles.com/java_unserialize2.html</a></p>
 
         
@@ -254,14 +254,14 @@
         repo: 'Daybr4ak.github.io',
         owner: 'Daybr4ak',
         admin: ['Daybr4ak'],
-        id: 'JAVA反序列化分析之Apache-Commons-Collections',
+        id: 'Apache-Commons-Collections',
     
     });
     gitalk.render('comment-container');
 </script>
 <!-- <script>
     var gitalk = new Gitalk({
-        id: 'JAVA反序列化分析之Apache-Commons-Collections',
+        id: 'Apache-Commons-Collections',
         owner: 'Daybr4ak',
         repo: 'Daybr4ak.github.io',
         oauth: {
