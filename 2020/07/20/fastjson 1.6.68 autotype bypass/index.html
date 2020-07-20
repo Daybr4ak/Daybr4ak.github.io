@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        Fastjson 1.6.68 autotype bypass - Daybr4ak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybr4ak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#fastjson-漏洞成因"><span class="toc-text">fastjson 漏洞成因</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#补丁对比"><span class="toc-text">补丁对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AutoType"><span class="toc-text">AutoType</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#漏洞分析"><span class="toc-text">漏洞分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        Fastjson 1.6.68 autotype bypass
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2020-07-20 15:03:35</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h2 id="fastjson-漏洞成因"><a href="#fastjson-漏洞成因" class="headerlink" title="fastjson 漏洞成因"></a>fastjson 漏洞成因</h2><ol>
+<li>Fastjson提供了反序列化功能，允许用户在输入JSON串时通过”@type”键对应的value指定任意反序列化类名.</li>
+<li>Fastjson自定义的反序列化机制会使用反射生成上述指定类的实例化对象，并自动调用该对象的setter方法及部分getter方法.</li>
+</ol>
+<h2 id="补丁对比"><a href="#补丁对比" class="headerlink" title="补丁对比"></a>补丁对比</h2><p>通过<a href="https://github.com/alibaba/fastjson/compare/1.2.68%E2%80%A61.2.69" target="_blank" rel="noopener">https://github.com/alibaba/fastjson/compare/1.2.68%E2%80%A61.2.69</a> 查看补丁的更新信息可以看到。</p>
+<p>在src/main/java/com/alibaba/fastjson/parser/ParserConfig.java中将原明文存储的期望类经自定义消息摘要函数转换为hash值并且新增了几个class对象。</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-14-08-58.png" alt=""></p>
+<p>这里借用<a href="https://xz.aliyun.com/t/7878" target="_blank" rel="noopener">带头老哥的图</a></p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-14-13-09.png" alt=""></p>
+<p>可以看到增加了对expectClass类，新增了三个方法分别为java.lang.Runnable、java.lang.Readable、java.lang.AutoCloseable</p>
+<h2 id="AutoType"><a href="#AutoType" class="headerlink" title="AutoType"></a>AutoType</h2><p>在Fastjson中存在AutoType这个东西，目的是为了防止进行恶意反序列化对象从而导致的安全问题，如果在没有启用AutoType的情况下默认是只有白名单以及一些基础类型可以被反序列化。在fastjson指定了@type后，主要用checkAutoType方法检测是否开了autotype开关。</p>
+<p>checkAutoType主要对传入的expectClass进行了判断，当safeMode模块没有开启时，如果传入的期望类不null,切不在对比的名单中就会将expectClass的值设置为True。</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-14-39-09.png" alt=""></p>
+<p>随后将传入的类进入白名单对比看是否存在，如果不存在，也就是类属于黑名单，并且autoType开启或者,expectClassFlag的值被设置成true就将类加入缓存中。</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-14-47-00.png" alt=""></p>
+<p>随后就是一些判断，并将符合条件的类加入到缓存mapping中，fastjson判断autotype的时候会先对mapping的内容进行判断。</p>
+<p>根据代码可知经过autotype校验的情况为：</p>
+<p>1、白名单里的类<br>2、开启了autotype<br>3、使用了jsonType注解<br>4、指定了期望的类<br>5、缓存中的mapping类</p>
+<p>本次漏洞利用的就是指定了期望的类,可以看到如果通过了上面的判断，切指定的期望类不为空，就会将该类添加到缓存mapping中并且返回该类的class。查找反序列化expectClass的子类或实现，如果构造方法或setter中含有其它类型可重复第一步构造一个反序列化链，直到找到可以利用的类为止。</p>
+<h2 id="漏洞分析"><a href="#漏洞分析" class="headerlink" title="漏洞分析"></a>漏洞分析</h2><p>前提说到进过autotype的校验有一种情况是输入的类为缓存中的mapping类。可以看到1.2.69修复后expectClass新加的对比类java.lang.AutoCloseable刚好在名单中。</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-15-43-45.png" alt=""></p>
+<p>当期望类传入切满足autotype的检测判断后会加入mapping类，然而咋在加入map池的前面对传入的期望类进行了判断。</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-15-48-10.png" alt=""></p>
+<p>这里我们可以看到isAssignableFrom()这样一个方法，这个方法用于判断里面的类是否为继承类。也就是说如果我们利用了java.lang.AutoCloseable这个方法去攻击fastjson，那么后续反序列化的链路一定是要继承于该类的子类。</p>
+<p>这里简单抄了一个payload过来进一步分析。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> fastjsonRce.Fj68;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> <span class="keyword">implements</span> <span class="title">AutoCloseable</span></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Test</span><span class="params">(String cmd)</span></span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Runtime.getRuntime().exec(cmd);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">close</span><span class="params">()</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>加载payload,然后在checkAutoType的入口下断点</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"@type"</span>:<span class="string">"java.lang.AutoCloseable"</span>, <span class="attr">"@type"</span>:<span class="string">"fastjsonRce.Fj68.Test"</span>, <span class="attr">"cmd"</span>:<span class="string">"/System/Applications/Calculator.app/Contents/MacOS/Calculator"</span>&#125;</span><br></pre></td></tr></table></figure>
+<p>这里可以看到第一次进来解析的类为java.lang.AutoCloseable，由于该类存在与mapping池中，所以期望类为空值。</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-16-01-13.png" alt=""></p>
+<p>随后将该类进行了反序列化，切该类使用的是JavaBeanDeserializer反序列化器，由于序列化的对象为接口，所以在使用JavaBeanDeserializer会继续解析下一个json字段。</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-16-03-42.png" alt=""></p>
+<p>可以看到进行了第二次的checkAutoType，并且将java.lang.AutoCloseable作为了其期望类</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-16-09-55.png" alt=""></p>
+<p>由于新传入的类不在mapping池中，但expectClassFlag的值被设置成了true进入了如下判断。将该类加入到了mapping池中</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-16-16-13.png" alt=""></p>
+<p>随后进入了expectClass != null的判断。这里的期望类为java.lang.AutoCloseable，因此这也就是之前说的为什么攻击的payload需要继承该类。</p>
+<p>随后返回的clazz被赋值为我们的攻击payload Test.class随后使用JavaBeanDeserializer对传入的内容进行了序列化</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-16-23-03.png" alt=""></p>
+<p>对与该方法的利用还有一个处罚点就是浅蓝师傅最开始说的ThrowableDeserializer，由于该方法是抛出异常时处罚的，切没有开发人员会将执行命令，lookup等方法写到异常处理的地方，因此这个方法不适用于寻找gadget。这里也将主要存在点附上，代码没截全有兴趣的可以自行探索。</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-16-38-21.png" alt=""></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对于该反序列化的挖取其方法需要继承java.lang.AutoCloseable、java.lang.Runnable、java.lang.Readable中的一个类，但是其中部分类的使用被做了限制：</p>
+<p><img src="/img/media/Fastjson1.68/2020-07-20-16-43-18.png" alt=""></p>
+<p>如果类继承与上面几种接口，则会直接抛出异常。</p>
+<p>另外一种思路就是根据<a href="https://b1ue.cn/archives/382.html" target="_blank" rel="noopener">浅蓝师傅的文章</a>去寻找文件读写。</p>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404/">胖虎</a></span>
+        <span>/</span>
+        
+        <span><a href="https://gloxec.github.io/">hook</a></span>
+        <span>/</span>
+        
+        <span><a href="https://drops.org.cn/">Ra1ndr0op</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+	    总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv">
+	    总访客
+            <span id="busuanzi_value_site_uv"></span>人
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+
+    // gitalk的主要参数
+        clientID: 'b2b890dbf29d011e8a47',
+        clientSecret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        repo: 'daybr4ak.github.io',
+        owner: 'daybr4ak',
+        admin: ['Daybr4ak'],
+        id: 'Fastjson 1.6.68 autotype bypass',
+    
+    });
+    gitalk.render('comment-container');
+</script>
+<!-- <script>
+    var gitalk = new Gitalk({
+        id: 'Fastjson 1.6.68 autotype bypass',
+        owner: 'daybr4ak',
+        repo: 'daybr4ak.github.io',
+        oauth: {
+            client_id: 'b2b890dbf29d011e8a47',
+            client_secret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        },
+    })
+    gitment.render('comment-container')
+</script> -->
+
+
+
+
+</html>
