@@ -11,7 +11,7 @@
 
     <title>
         
-        Daybr4ak&#39;s Blog
+        yso总结 - Daybr4ak&#39;s Blog
         
     </title>
 
@@ -53,7 +53,7 @@
     </div>
     <div class="contents" id="nav-content">
         <ul>
-            <li  class=active >
+            <li >
                 <a href="/">
                     <i class="iconfont icon-shouye1"></i>
                     <span>主页</span>
@@ -88,6 +88,10 @@
         </ul>
     </div>
     
+        <div id="toc" class="toc-article">
+    
+</div>
+    
 </div>
 
 
@@ -111,173 +115,52 @@
     <div class="index-middle">
         <!-- Main Content -->
         
-<div class="post-preview-container" style="min-height: 360px">
-    
-    <div class="post-preview">
-        <div class="post-time">2020-07-27</div>
-        <div class="post-info">
-            <a href="/2020/07/27/yso总结/">
-                <h3>
-                    yso总结
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
+
+
+<div class="post-container">
+    <div class="post-title">
+        yso总结
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2020-07-23</div>
-        <div class="post-info">
-            <a href="/2020/07/23/MySQL-JDBC反序列化学习/">
-                <h3>
-                    MySQL-JDBC 反序列化学习
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2020-07-27 11:10:53</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2020-07-20</div>
-        <div class="post-info">
-            <a href="/2020/07/20/fastjson 1.6.68 autotype bypass/">
-                <h3>
-                    Fastjson 1.6.68 autotype bypass
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
+    <div class="post-content ">
+        <p>​    ysoserial工具总结下commit系列，主要是通过org.apache.commons.collections下的Transformer触发invoke反射，通过利用java反射调用执行命令，然后通过一些存在反序列化的库类，在反序列化的过程中触发transformer进行invoke反射执行命令。如lazyMap下的get value、PriorityQueue下的Comparator方法等等，而在org.apache.commons.collections的库中包含多个可以触发transformer的方法，从而可以使安全人员使用不同方法进行利用，然而ysoserial工具中出现了两种形式去触发。一种是InvokerTransformer使用java反射对我们执行的命令层层调用，另一种则是利用defineclass的方法，将编译好的字节码load进入内存中进行实例话，这里主要用到了TrAXFilter这个类，类的加载机制中提到，当类初始化的时候 static initializer在类载入时将自动执行（静态块内的代码）在该类初始化的时候进行了templatesImpl.newTransformer调用，从而触发了invoke反射链执行命令。</p>
+<p>​    虽然在方法中看到了多个commonscollections的利用，其实只是使用了不同的类使用以上两种思路在反序列化的过程中触发transformer。这是主要的思路，可以依据这个进行深入挖掘新的反序列化利用链。</p>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2020-06-15</div>
-        <div class="post-info">
-            <a href="/2020/06/15/CVE-2020-2555 反序列化分析/">
-                <h3>
-                    CVE-2020-2555 反序列化分析
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
     </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2019-07-17</div>
-        <div class="post-info">
-            <a href="/2019/07/17/JAVA反序列化分析之Apache-Commons-Collections/">
-                <h3>
-                    JAVA反序列化分析之Apache-Commons-Collections
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2019-04-20</div>
-        <div class="post-info">
-            <a href="/2019/04/20/Title批量获取工具/">
-                <h3>
-                    Title批量获取工具
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#安全工具" title="安全工具">安全工具</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2019-04-01</div>
-        <div class="post-info">
-            <a href="/2019/04/01/pwable-rk题目相关知识不定期更新/">
-                <h3>
-                    pwable.rk题目相关知识(不定期更新)
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#pwn" title="pwn">pwn</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
-    <div class="post-preview">
-        <div class="post-time">2018-09-20</div>
-        <div class="post-info">
-            <a href="/2018/09/20/Python-Shell/">
-                <h3>
-                    Python Shell
-                </h3>
-            </a>
-            <p>
-                
-                <span>/</span>
-                
-                <a class="tag" href="/tags/#python" title="python">python</a>
-                <span>/</span>
-                
-                
-            </p>
-        </div>
-    </div>
-    
 </div>
-<ul class="pager">
-    
-    
-</ul>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
 
     </div>
 </div>
@@ -344,13 +227,41 @@
     // We expose some of the variables needed by the front end
     window.hexo_search_path = "search.json"
     window.hexo_root = "/"
-    window.isPost = false
+    window.isPost = true
 </script>
 <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
 <script src="/js/index.js"></script>
 <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 <script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+
+    // gitalk的主要参数
+        clientID: 'b2b890dbf29d011e8a47',
+        clientSecret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        repo: 'daybr4ak.github.io',
+        owner: 'daybr4ak',
+        admin: ['Daybr4ak'],
+        id: 'yso总结',
+    
+    });
+    gitalk.render('comment-container');
+</script>
+<!-- <script>
+    var gitalk = new Gitalk({
+        id: 'yso总结',
+        owner: 'daybr4ak',
+        repo: 'daybr4ak.github.io',
+        oauth: {
+            client_id: 'b2b890dbf29d011e8a47',
+            client_secret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        },
+    })
+    gitment.render('comment-container')
+</script> -->
 
 
 
