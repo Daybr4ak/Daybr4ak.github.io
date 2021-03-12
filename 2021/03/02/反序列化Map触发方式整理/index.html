@@ -139,7 +139,7 @@
     <div class="post-content ">
         <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>​    本文主要整理在反序列化利用链中通过Map.get()方式触发的函数，并进行流程分析。希望通过对多个触发流程的分析可以给大家更清晰了解如何构造出可利用的反序列化链，并在以后的审计中挖掘出新的利用链。</p>
 <h2 id="简单回顾"><a href="#简单回顾" class="headerlink" title="简单回顾"></a>简单回顾</h2><p>​    针对于commons-collections系列的利用链目前构造的主要思路是通过LazyMap.get()方法进行调用transformer.transform来触发ChainedTransformer、InvokerTransformer进行反射来打到Runtime.getRuntime.exec()的目的。基本核心为TiedMapEntry-&gt;hashCode()/toString() 触发到LazyMap-&gt;get()。可以看到LazyMap.get()的核心内容如下图所示：</p>
-<p><img src="./反序列化Map触发方式整理/image-20210302100717442.png" alt="image-20210302100717442"></p>
+<p><img src="./image-20210302100717442.png" alt="image-20210302100717442"></p>
 <p>所以在挖掘的时候我们可以缩小目标到寻找一个Map，在这个Map中，调用了transformer.transform，并且transformer的值可控。便可进一步修改整个利用链达到自己的目的。</p>
 <h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>​    在找寻这类方法时要满足两个条件：</p>
 <p>​    1、因为是反序列化漏洞的利用，因此我们寻找的函数需要继承于Serializable满足可被序列化的条件。</p>
@@ -147,13 +147,13 @@
 <p>通过利用链中调用的Map类以此分析理解整体的构造流程。</p>
 <h3 id="DualHashBidiMap"><a href="#DualHashBidiMap" class="headerlink" title="DualHashBidiMap"></a>DualHashBidiMap</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">利用条件：</span><br><span class="line">commons-collections-<span class="number">3.1</span><span class="selector-class">.jar</span> or commons-collections-<span class="number">3.2</span>.<span class="number">1</span>.jar</span><br><span class="line"></span><br><span class="line">触发过程：</span><br><span class="line">org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.bidimap</span><span class="selector-class">.DualHashBidiMap-</span>&gt;readObject()</span><br><span class="line">	org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.bidimap</span><span class="selector-class">.DualHashBidiMap-</span>&gt;putAll()</span><br><span class="line">		org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.bidimap</span><span class="selector-class">.DualHashBidiMap-</span>&gt;put()</span><br><span class="line">			java<span class="selector-class">.util</span><span class="selector-class">.HashMap-</span>&gt;containsKey()</span><br><span class="line">				java<span class="selector-class">.util</span><span class="selector-class">.HashMap-</span>&gt;hash()</span><br><span class="line">					org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.TiedMapEntry-</span>&gt;hashCode()</span><br><span class="line">						org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.TiedMapEntry-</span>&gt;getValue()</span><br><span class="line">							org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.LazyMap-</span>&gt;get()</span><br></pre></td></tr></table></figure>
 <p>首先看到DualHashBidiMap类在重写readObject()方法的时候调用了一个putAll()方法，进一步跟入。</p>
-<p><img src="./反序列化Map触发方式整理/image-20210302101952009.png" alt="image-20210302101952009"></p>
+<p><img src="./image-20210302101952009.png" alt="image-20210302101952009"></p>
 <p>可以看到这里调用了put()方法进行了this.maps[].containsKey()方法调用。</p>
-<p><img src="./反序列化Map触发方式整理/image-20210302102334576.png" alt="image-20210302102334576"></p>
+<p><img src="./image-20210302102334576.png" alt="image-20210302102334576"></p>
 <p>通过查看HashMap()的方法我们可以看到，在HashMap.containsKey()方法中进行了hash(key)的操作。而在该方法中进行了key.hashCode()方法的调用。</p>
-<p><img src="./反序列化Map触发方式整理/image-20210302102835076.png" alt="image-20210302102835076"></p>
+<p><img src="./image-20210302102835076.png" alt="image-20210302102835076"></p>
 <p>进一步观察TiedMapEntry这个类我们可以看到在该类的方法中有三个函数均调用了getValue()操作，也就是说这三个方法在构造时我们都可以利用。</p>
-<p><img src="./反序列化Map触发方式整理/image-20210302103212596.png" alt="image-20210302103212596"></p>
+<p><img src="./image-20210302103212596.png" alt="image-20210302103212596"></p>
 <p>在该类的getValue()方法中调用了this.map.get(this.key)方法。</p>
 <p>至此我们走到了利用链的最后一环也就是文章开头所说的CC系列的transformer调用触发点。</p>
 <p>整个利用链调用的类已经看完了接下来简单说明下构造所要做的事情。</p>
