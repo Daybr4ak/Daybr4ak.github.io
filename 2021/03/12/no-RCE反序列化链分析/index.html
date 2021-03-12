@@ -89,7 +89,7 @@
     </div>
     
         <div id="toc" class="toc-article">
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完整poc"><span class="toc-text">完整poc</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析-amp-构造"><span class="toc-text">分析&amp;构造</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#完整poc"><span class="toc-text">完整poc</span></a></li></ol>
 </div>
     
 </div>
@@ -137,8 +137,8 @@
 </span>
     </div>
     <div class="post-content ">
-        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>看到蚂蚁金服出了一个java web题目no rce <a href="https://mp.weixin.qq.com/s/yQ-00YaykUe41S0DdlgoiQ" target="_blank" rel="noopener">链接</a>,文中的jdbc mysql 反序列化 和 AspectJWeaver反序列化在之前的文章中都有分析。本文章主要分析下出题人利用datamap替换了cc链中的lazymap来构造利用链。</p>
-<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>具体的lazymap利用链再上一篇文章中已经给出了分析。这里在hashset -&gt; hashmap 以及最后SimpleCache.put()触发这部分都不在分析，直接复制过来用即可。主要分析datamap的触发流程。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>看到蚂蚁金服出了一个java web题目no rce <a href="https://github.com/Ant-FG-Lab/non_RCE" target="_blank" rel="noopener">题目源码</a> ,文中的jdbc mysql 反序列化 和 AspectJWeaver反序列化在之前的文章中都有分析。本文章主要分析下出题人利用datamap替换了cc链中的lazymap来构造利用链。题目<a href="https://mp.weixin.qq.com/s/yQ-00YaykUe41S0DdlgoiQ" target="_blank" rel="noopener">witreup</a></p>
+<h2 id="分析-amp-构造"><a href="#分析-amp-构造" class="headerlink" title="分析&amp;构造"></a>分析&amp;构造</h2><p>具体的lazymap利用链再上一篇文章中已经给出了分析。这里在hashset -&gt; hashmap 以及最后SimpleCache.put()触发这部分都不在分析，直接复制过来用即可。主要分析datamap的触发流程。</p>
 <figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">HashSet.readObject()</span><br><span class="line">    HashMap.<span class="keyword">put</span>()</span><br><span class="line">        HashMap.hash()</span><br><span class="line">            DataMap<span class="symbol">$</span>Entry.hashcode</span><br><span class="line">                DataMap<span class="symbol">$</span>Entry.getValue()</span><br><span class="line">                    DataMap.get()</span><br><span class="line">                        SimpleCache<span class="symbol">$</span>StorableCachingMap.<span class="keyword">put</span>()</span><br><span class="line">                            SimpleCache<span class="symbol">$</span>StorableCachingMap.writeToPath()</span><br><span class="line">                                FileOutputStream.write()</span><br></pre></td></tr></table></figure>
 <p>首先我们看datamp的实现</p>
 <p><img src="./image-20210312111446859.png" alt="image-20210312111446859"></p>
